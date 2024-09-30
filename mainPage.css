@@ -1,0 +1,151 @@
+
+
+body {
+    background-color: #ffffff; 
+    margin: 0;
+    padding: 0;
+    color: #333333;
+  }
+  
+  .sidebar {
+    position: fixed;
+    width: 100px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .sidebar li {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar img {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .homepage-container {
+    padding-left: 50px; 
+  }
+  
+  .top-section {
+    display: flex;
+    justify-content: space-between; 
+    width: 100%; 
+}
+  
+  .product-list-form {
+    display: flex;
+    justify-content: space-around; 
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-left: 80px; 
+    
+}
+  
+.product-card {
+  background-color: #ffffff;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  width: 400px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 10px;
+  height: 400px;
+  margin: 10px; 
+}
+
+.product-image {
+    width: 80%;
+    height: 200px; 
+    object-fit: cover;
+    margin-bottom: 5px; 
+    margin-top: 10px;
+}
+  
+.product-price {
+    color: #4CAF50;
+    font-weight: bold;
+    margin-top: 10px; 
+}
+  
+.buy-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px; 
+    margin-bottom: 5px;
+}
+  
+  .buy-button:hover {
+    background-color: #45a049;
+  }
+  
+  .featured-product {
+    background-color: #ffffff;
+    width: 45%; 
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto; 
+    padding: 20px; 
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+}
+
+  .product-display {
+    text-align: center;
+    padding: 20px;
+    height: 500px;
+    
+  }
+  
+  .featured-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  
+  .special-products {
+    margin-top: 50px;
+    text-align: center;
+  }
+  
+  .special-product-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px; 
+  }
+  
+  .special-product-card {
+    background-color: #ffffff;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    width: 150px;
+    padding: 10px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 10px;
+  }
+  
+  .special-product-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  
+  
