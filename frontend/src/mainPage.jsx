@@ -4,7 +4,7 @@ import './mainPage.css';
 function HomePage() {
     return (
       
-        <div className="homepage-container">
+        <div id="homepage-container">
 
         <div className="sidebar">
         <ul>
