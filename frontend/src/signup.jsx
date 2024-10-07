@@ -16,7 +16,7 @@ import './signup.css';
 
             <p className="input-field">
               <label for="Lname">Last name:</label>
-              <input type="text" name="sName" id="Lname" />
+              <input type="text" name="Lname" id="Lname" />
             </p>
 
             <p className="input-field">
