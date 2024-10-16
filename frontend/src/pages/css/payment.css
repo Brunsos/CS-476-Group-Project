@@ -1,0 +1,78 @@
+ body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+  }
+  
+ #payment-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+  }
+  
+ #payment-form {
+    
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 450px; 
+        max-width: 120%; 
+      }
+  
+ #payment-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+ .form-group {
+    margin-bottom: 15px;
+  }
+  
+ .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+ .form-group input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+ .form-group input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+ .continue-button {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    width: 90%;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+ .continue-button:hover {
+    background-color: #c9302c;
+  }
+
+  @media (max-width: 1200px) {
+    .special-product-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .special-product-list {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+  
+  
