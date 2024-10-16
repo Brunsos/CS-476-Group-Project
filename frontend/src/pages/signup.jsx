@@ -49,8 +49,24 @@ const Signup = () => {
     }
 
     try {
-      //alert('Registration successful!');
-      navigate('/login');
+      const response = await fetch('http://localhost:5000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName, lastName, email, password, confirmPassword,
+        }),
+      });
+  
+      const data = await response.json();
+
+      if (response.status === 201) {
+        //alert('Registration successful!');
+        navigate('/login');
+      } else {
+        alert(data.msg || 'Error during registration');
+      }
     } catch (error) {
       console.error('Error during registration:', error);
     }
