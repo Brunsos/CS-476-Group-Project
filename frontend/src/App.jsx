@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Signup from './pages/signup.jsx';
-import Login from './pages/login.jsx';
-import Mainpage from './pages/mainPage.jsx';
-import Vendor from './pages/vendor.jsx';
-import Product from './pages/product.jsx';
-import List from './pages/list.jsx';
-import VendorPost from './pages/vendorPost.jsx';
-import Cart from './pages/cart.jsx';
-import Shipping from './pages/shipping.jsx';
-import PlaceOrder from './pages/placeOrder.jsx'; 
-import Favorite from './pages/favorite.jsx'; 
+import Signup from './pages/signup';
+import Login from './pages/login';
+import Mainpage from './pages/mainPage';
+import Vendor from './pages/vendor';
+import Product from './pages/product';
+import List from './pages/list';
+import VendorPost from './pages/vendorPost';
+import Cart from './pages/cart';
+import Shipping from './pages/shipping';
+import PlaceOrder from './pages/placeOrder'; 
+import Favorite from './pages/favorite'; 
 
 const App = () => {
     return (
