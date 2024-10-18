@@ -84,7 +84,7 @@ const Login = () => {
                             <span>Favorites</span>
                         </Link>
                     </li>
-                    
+
                 </ul>
 
                 <ul className="bottom-links">
@@ -130,7 +130,7 @@ const Login = () => {
                     </p>
 
                     <p className="login-prompt">
-                        New user? <a href="/login" className="login-link">Register</a>
+                        New user? <a href="/signup" className="login-link">Register</a>
                     </p>
 
                 </form>
