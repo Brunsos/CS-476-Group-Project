@@ -1,6 +1,6 @@
-import './css/product.css';
-import './css/sidebar.css';
-import { Link } from 'react-router-dom';
+import '../css/product.css';
+import '../css/sidebar.css';
+
 
 function ProductPage() {
 
@@ -106,3 +106,4 @@ function ProductPage() {
 }
 
 export default ProductPage;
+
