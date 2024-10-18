@@ -16,10 +16,12 @@
     padding: 20px;
     border-right: 1px solid #ddd;
     height: 100%; 
+    margin-left: 80px;
   }
   
   #filter-container h1 {
     margin-bottom: 10px;
+  
   }
   
   .filter-options {

@@ -1,5 +1,5 @@
-import './css/placeOrder.css';
-import './css/sidebar.css';
+import '../css/placeOrder.css';
+import '../css/sidebar.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 

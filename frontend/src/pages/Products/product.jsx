@@ -1,5 +1,5 @@
-import './css/product.css';
-import './css/sidebar.css';
+import '../css/product.css';
+import '../css/sidebar.css';
 
 function ProductPage() {
   return (

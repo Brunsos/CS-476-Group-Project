@@ -1,5 +1,5 @@
-import './css/vendorPost.css';
-import './css/sidebar.css';
+import '../css/vendorPost.css';
+import '../css/sidebar.css';
 import { Link } from 'react-router-dom';
 
 function CreateProduct() {
