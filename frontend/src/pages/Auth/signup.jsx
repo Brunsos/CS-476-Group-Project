@@ -62,7 +62,6 @@ const Signup = () => {
       const data = await response.json();
 
       if (response.status === 201) {
-        //alert('Registration successful!');
         navigate('/login');
       } else {
         alert(data.msg || 'Error during registration');
