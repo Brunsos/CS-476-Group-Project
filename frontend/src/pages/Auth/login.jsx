@@ -1,17 +1,56 @@
-import './css/login.css';
-import './css/sidebar.css';
+import '../css/login.css';
+import '../css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-function App() {
-    const navigate = useNavigate();
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
-    const handleLogin = (e) => {
-        navigate('/mainPage');
-    };
+    const handleLogin = async (e) => {
+        e.preventDefault();
+    const newErrors = {};
+
+    if (!email.trim()) {
+      newErrors.email = 'Email is required.';
+    }
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      newErrors.email = 'Invalid email address.';
+    }
+    if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        //alert('Login successful!');
+        navigate('/mainPage');  // Redirect after successful login
+      } else {
+        alert(data.msg || 'Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+};
 
     return (
 
@@ -77,12 +116,13 @@ function App() {
                     <p className="input-field">
                         <label htmlFor="email">Email address:</label>
                         <input type="text" name="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        {errors.email && <span className="error">{errors.email}</span>}
                     </p>
 
                     <p className="input-field">
                         <label htmlFor="password">Password:</label>
-                        <input type="password" name="Password" id="Password" value={password} onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <input type="password" name="Password" id="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        {errors.password && <span className="error">{errors.password}</span>}
                     </p>
 
                     <p className="input-field">
@@ -101,6 +141,6 @@ function App() {
             </div>
         </div>
     );
-}
+};
 
-export default App;
+export default Login;
