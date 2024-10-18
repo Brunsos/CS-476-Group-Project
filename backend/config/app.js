@@ -10,15 +10,15 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-app.use(cors());  // Add this line to enable cross-origin requests
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
-// Define routes (e.g., for sign-up)
+// Signup route
 app.post("/signup", async (req, res) => {
-    console.log(req.body); // Log the received data
+    console.log(req.body);
 
     const { firstName, lastName, email, password, confirmPassword } = req.body;
 
@@ -58,7 +58,7 @@ app.post("/login", async (req, res) => {
             return res.status(400).json({ msg: 'Invalid password' });
         }
 
-        // If successful, return a success message (or token in a real app)
+        // If successful, return a success message
         res.status(200).json({ msg: 'Login successful' });
     } catch (err) {
         console.error(err);
@@ -66,7 +66,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.use((err, req, res) => {
+app.use((err, res) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });

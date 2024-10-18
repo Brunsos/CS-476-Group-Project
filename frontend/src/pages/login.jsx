@@ -42,8 +42,7 @@ const Login = () => {
       const data = await response.json();
 
       if (response.status === 200) {
-        //alert('Login successful!');
-        navigate('/mainPage');  // Redirect after successful login
+        navigate('/mainPage');
       } else {
         alert(data.msg || 'Invalid credentials');
       }
