@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [userName, setuserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,8 +14,7 @@ const Signup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'firstName') setFirstName(value);
-    if (name === 'lastName') setLastName(value);
+    if (name === 'userName') setuserName(value);
     if (name === 'email') setEmail(value);
     if (name === 'password') setPassword(value);
     if (name === 'confirmPassword') setConfirmPassword(value);
@@ -26,12 +24,10 @@ const Signup = () => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!firstName.trim()) {
-      newErrors.firstName = 'First name is required.';
+    if (!userName.trim()) {
+      newErrors.userName = 'First name is required.';
     }
-    if (!lastName.trim()) {
-      newErrors.lastName = 'Last name is required.';
-    }
+  
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       newErrors.email = 'Invalid email address.';
@@ -55,7 +51,7 @@ const Signup = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName, lastName, email, password, confirmPassword,
+          userName, lastName, email, password, confirmPassword,
         }),
       });
   
@@ -127,15 +123,11 @@ const Signup = () => {
       <div id="form-container">
         <form className="signup-form" onSubmit={handleSubmit}>
           <p className="input-field">
-            <label htmlFor="firstName">First name:</label>
-            <input type="text" name="firstName" value={firstName} onChange={handleChange} />
-            {errors.firstName && <span className="error">{errors.firstName}</span>}
+            <label htmlFor="userName">User name:</label>
+            <input type="text" name="userName" value={userName} onChange={handleChange} />
+            {errors.userName && <span className="error">{errors.userName}</span>}
           </p>
-          <p className="input-field">
-            <label htmlFor="lastName">Last name:</label>
-            <input type="text" name="lastName" value={lastName} onChange={handleChange} />
-            {errors.lastName && <span className="error">{errors.lastName}</span>}
-          </p>
+          
           <p className="input-field">
             <label htmlFor="email">Email address:</label>
             <input type="email" name="email" value={email} onChange={handleChange} />
@@ -164,5 +156,8 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
+
 
 
