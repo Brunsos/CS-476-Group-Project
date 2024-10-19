@@ -1,5 +1,6 @@
 import '../css/product.css';
 import '../css/sidebar.css';
+import { Link } from 'react-router-dom';
 
 
 function ProductPage() {
