@@ -74,7 +74,7 @@ body {
 
 #signup-container {
   display: flex;
-  height: 1200px;
+  height: 1130px;
 }
 
 #form-container {
@@ -120,16 +120,4 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-@media (max-width: 1200px) {
-  .special-product-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .special-product-list {
-    grid-template-columns: repeat(1, 1fr);
-  }
 }
