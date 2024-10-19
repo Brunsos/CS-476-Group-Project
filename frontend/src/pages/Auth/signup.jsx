@@ -25,7 +25,7 @@ const Signup = () => {
     const newErrors = {};
 
     if (!userName.trim()) {
-      newErrors.userName = 'First name is required.';
+      newErrors.userName = 'user name is required.';
     }
   
     const emailRegex = /\S+@\S+\.\S+/;
