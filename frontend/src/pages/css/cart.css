@@ -110,15 +110,3 @@
 .checkout-button:hover {
   background-color: #ff3b3f;
 }
-
-@media (max-width: 1200px) {
-  .special-product-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .special-product-list {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
