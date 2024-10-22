@@ -51,12 +51,15 @@ const Signup = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userName, lastName, email, password, confirmPassword,
+          userName,
+          email,
+          password,
+          confirmPassword,
         }),
       });
-  
+    
       const data = await response.json();
-
+    
       if (response.status === 201) {
         navigate('/login');
       } else {
@@ -64,6 +67,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      alert('An error occurred while registering. Please try again.');
     }
   };
 
@@ -156,6 +160,12 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
+
+
+
+
 
 
 
