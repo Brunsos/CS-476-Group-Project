@@ -20,22 +20,29 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connecte
 app.post("/signup", async (req, res) => {
     console.log(req.body);
 
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
+    const { userName, email, password, confirmPassword } = req.body;
+    let errors = {};
 
-    // Check if passwords match
-    if (password !== confirmPassword) {
-        return res.status(400).json({ msg: 'Passwords do not match' });
-    }
-
+    
     try {
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            errors.confirmPassword = 'Passwords do not match';
+        }
+
         // Check if the user already exists
         let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ msg: 'User already exists' });
+        if (user) errors.email = 'User already exist'
 
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
+        }
+        else{
+            user = new User({ userName, email, password });
+            await user.save();
+            res.status(201).json({ msg: 'User registered successfully' });
+        }
         // Create and save the new user
-        user = new User({ firstName, lastName, email, password });
-        await user.save();
-        res.status(201).json({ msg: 'User registered successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -45,17 +52,22 @@ app.post("/signup", async (req, res) => {
 // Login Route
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
+    let errors = {};
 
     try {
         // Find the user by email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Invalid email' });
+            errors.email = 'Invalid email';
         }
 
         // Compare the provided password
         if (password !== user.password) {
-            return res.status(400).json({ msg: 'Invalid password' });
+            errors.password = 'Invalid password';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
         }
 
         // If successful, return a success message

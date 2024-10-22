@@ -10,8 +10,11 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+const handleLogin = async (e) => {
+    e.preventDefault();
+
+    setErrors({});
+
     const newErrors = {};
 
     if (!email.trim()) {
@@ -43,7 +46,11 @@ const Login = () => {
 
       if (response.status === 200) {
         navigate('/mainPage');
-      } else {
+      } 
+      else if(response.status === 400) {
+        setErrors(data.errors);
+      }
+      else {
         alert(data.msg || 'Invalid credentials');
       }
     } catch (error) {
