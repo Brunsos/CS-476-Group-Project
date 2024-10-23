@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
     "backend": "nodemon backend/index.js",
     "frontend": "npm run dev --prefix frontend",
     "dev": "concurrently\"npm run frontend\"\"npm run backend\""
