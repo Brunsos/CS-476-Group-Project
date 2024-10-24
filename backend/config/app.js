@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import User from "./user.js";  // Import the User model
+import Buyer from "../db/buyer.js";  // Import the User model
 import cors from "cors";
 
 dotenv.config();
@@ -29,12 +29,12 @@ app.post("/signup", async (req, res) => {
 
     try {
         // Check if the user already exists
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ msg: 'User already exists' });
+        let buyer = await Buyer.findOne({ email });
+        if (buyer) return res.status(400).json({ msg: 'User already exists' });
 
         // Create and save the new user
-        user = new User({ firstName, lastName, email, password });
-        await user.save();
+        buyer = new Buyer({ firstName, lastName, email, password, province, city, address, isVendor });
+        await buyer.save();
         res.status(201).json({ msg: 'User registered successfully' });
     } catch (err) {
         console.error(err);
@@ -48,13 +48,13 @@ app.post("/login", async (req, res) => {
 
     try {
         // Find the user by email
-        const user = await User.findOne({ email });
-        if (!user) {
+        const buyer = await Buyer.findOne({ email });
+        if (!buyer) {
             return res.status(400).json({ msg: 'Invalid email' });
         }
 
         // Compare the provided password
-        if (password !== user.password) {
+        if (password !== buyer.password) {
             return res.status(400).json({ msg: 'Invalid password' });
         }
 
