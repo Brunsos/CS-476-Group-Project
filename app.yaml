@@ -4,3 +4,6 @@ env_variables:
   NODE_ENV: 'production'
 
 entrypoint: node index.js
+
+env_variables:
+  MONGO_URI: 'mongodb+srv://teece22d:Xl8qeNapkvxtvpjY@farmersfavorite.hc2ak.mongodb.net/ffdb?retryWrites=true&w=majority'
