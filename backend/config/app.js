@@ -83,7 +83,7 @@ app.post("/login", async (req, res) => {
 
 app.use((err, res) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).send({ error: err.message });
 });
 
 export default app;
