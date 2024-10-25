@@ -4,20 +4,29 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+
 const Signup = () => {
   const [userName, setuserName] = useState('');
+  const [province, setProvince] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isVendor, setIsVendor] = useState(false);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'userName') setuserName(value);
+    if (name === 'province') setProvince(value);
+    if (name === 'city') setCity(value);
+    if (name === 'address') setAddress(value);
     if (name === 'email') setEmail(value);
     if (name === 'password') setPassword(value);
     if (name === 'confirmPassword') setConfirmPassword(value);
+    if (name === 'isVendor') setIsVendor(value);
   };
 
   const handleSubmit = async (e) => {
@@ -26,6 +35,16 @@ const Signup = () => {
 
     if (!userName.trim()) {
       newErrors.userName = 'user name is required.';
+    }
+
+    if (province.valueOf() === "F"){
+      newErrors.province = "Please enter your province";
+    }
+    if (!city.trim()){
+      newErrors.city = "Please enter your city";
+    }
+    if (!address.trim()) {
+      newErrors.address = "Please enter your address";
     }
   
     const emailRegex = /\S+@\S+\.\S+/;
@@ -52,9 +71,13 @@ const Signup = () => {
         },
         body: JSON.stringify({
           userName,
+          province,
+          city,
+          address,
           email,
           password,
           confirmPassword,
+          isVendor
         }),
       });
     
@@ -133,6 +156,29 @@ const Signup = () => {
           </p>
           
           <p className="input-field">
+            <label htmlFor="province">Province:</label>
+            <select name="province" id="province" value={province} onChange={handleChange}>
+              <option value="F" hidden></option>
+              <option value="AB">AB</option>
+              <option value="SK">SK</option>
+              <option value="MB">MB</option>
+            </select>
+            {errors.province && <span className="error">{errors.province}</span>}
+          </p>
+
+          <p className="input-field">
+            <label htmlFor="city">City:</label>
+            <input type="text" name="city" value={city} onChange={handleChange} />
+            {errors.city && <span className="error">{errors.city}</span>}
+          </p>
+          
+          <p className="input-field">
+            <label htmlFor="address">Address:</label>
+            <input type="text" name="address" value={address} onChange={handleChange} />
+            {errors.address && <span className="error">{errors.address}</span>}
+          </p>
+          
+          <p className="input-field">
             <label htmlFor="email">Email address:</label>
             <input type="email" name="email" value={email} onChange={handleChange} />
             {errors.email && <span className="error">{errors.email}</span>}
@@ -146,6 +192,10 @@ const Signup = () => {
             <label htmlFor="confirmPassword">Confirm Password:</label>
             <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleChange} />
             {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
+          </p>
+          <p className="input-field">
+            <label htmlFor="isVendor">Are you a vendor?</label>
+            <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange} />
           </p>
           <p className="input-field">
             <button type="submit">Signup</button>

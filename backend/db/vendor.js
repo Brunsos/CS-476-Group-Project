@@ -7,8 +7,8 @@ const vendorSchema = new mongoose.Schema({
   province: { type: String, required: false },
   city: { type: String, required: false },
   address: { type: String, required: false },
-  isVendor: { type: Boolean, required: false},
-  inventory: { type: Int32Array, required: false}
+  isVendor: { type: Boolean, required: false },
+  // inventory: { type: Array, required: false }
 });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);
