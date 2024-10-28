@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import User from "./user.js";  // Import the User model
+import User from "../db/user.js";  // Import the User model
 import cors from "cors";
 
 dotenv.config();

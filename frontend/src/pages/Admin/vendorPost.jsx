@@ -9,27 +9,27 @@ function CreateProduct() {
         <ul>
           <li>
             <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
+              <img src="/assets/home.png" alt="mainPage" />
               <span>Home</span>
             </a>
           </li>
 
           <li>
             <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+              <img src="/assets/shop.png" alt="list" /><span>Shop</span>
             </a>
           </li>
 
           <li>
             <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
+              <img src="/assets/cart.png" alt="Cart" />
               <span>Cart</span>
             </a>
           </li>
 
           <li>
             <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
+              <img src="/assets/favorite.png" alt="Favorites" />
               <span>Favorites</span>
             </Link>
           </li>

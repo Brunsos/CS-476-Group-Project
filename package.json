@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "cd frontend && vite build",
     "start": "node index.js",
     "backend": "nodemon index.js",
     "frontend": "npm run dev --prefix frontend",
@@ -30,5 +31,8 @@
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
   }
 }

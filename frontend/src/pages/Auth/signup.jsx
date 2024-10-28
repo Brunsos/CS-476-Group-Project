@@ -20,6 +20,10 @@ const Signup = () => {
     if (name === 'confirmPassword') setConfirmPassword(value);
   };
 
+  const API_URL = process.env.NODE_ENV === 'production' 
+    ? '/signup'
+    : 'http://localhost:5000/signup';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,7 +52,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,27 +89,27 @@ const Signup = () => {
         <ul>
           <li>
             <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
+              <img src="/assets/home.png" alt="mainPage" />
               <span>Home</span>
             </a>
           </li>
 
           <li>
             <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+              <img src="/assets/shop.png" alt="list" /><span>Shop</span>
             </a>
           </li>
 
           <li>
             <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
+              <img src="/assets/cart.png" alt="Cart" />
               <span>Cart</span>
             </a>
           </li>
 
           <li>
             <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
+              <img src="/assets/favorite.png" alt="Favorites" />
               <span>Favorites</span>
             </Link>
           </li>
@@ -115,17 +119,17 @@ const Signup = () => {
         <ul className="bottom-links">
           <li>
             <a href="/Login">
-              <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
+              <img src="/assets/login.jpg" alt="Login" /><span>Login</span></a>
           </li>
 
           <li>
             <a href="/Signup">
-              <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
+              <img src="/assets/register.jpg" alt="Signup" /><span>Register</span>
             </a>
           </li>
           <li>
             <a href="/Vendor">
-              <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
+              <img src="/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
             </a>
           </li>
         </ul>
@@ -160,7 +164,7 @@ const Signup = () => {
         </form>
       </div>
       <div id="image-container">
-        <img src="/src/assets/farmer.jpg" alt="Featured Product" className="image-container" />
+        <img src="/assets/farmer.jpg" alt="Featured Product" className="image-container" />
       </div>
     </div>
   );

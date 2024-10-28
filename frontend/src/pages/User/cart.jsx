@@ -16,25 +16,25 @@ function ShoppingCart() {
                 <ul>
                     <li>
                         <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" />
+                            <img src="/assets/home.png" alt="mainPage" />
                             <span>Home</span>
                         </a>
                     </li>
                     <li>
                         <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+                            <img src="/assets/shop.png" alt="list" /><span>Shop</span>
                         </a>
                     </li>
                     <li>
                         <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" />
+                            <img src="/assets/cart.png" alt="Cart" />
                             <span>Cart</span>
                         </a>
                     </li>
 
                     <li>
                         <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
+                            <img src="/assets/favorite.png" alt="Favorites" />
                             <span>Favorites</span>
                         </Link>
                     </li>
@@ -43,17 +43,17 @@ function ShoppingCart() {
                 <ul className="bottom-links">
                     <li>
                         <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
+                            <img src="/assets/login.jpg" alt="Login" /><span>Login</span></a>
                     </li>
 
                     <li>
                         <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
+                            <img src="/assets/register.jpg" alt="Signup" /><span>Register</span>
                         </a>
                     </li>
                     <li>
                         <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
+                            <img src="/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
                         </a>
                     </li>
                 </ul>
@@ -63,7 +63,7 @@ function ShoppingCart() {
                 <h1 className="shopping-cart-title">Shopping Cart</h1>
                 <div className="cart-items">
                     <div className="cart-item">
-                        <img src="src/assets/banana.jpg" alt="Fresh Tomatoes" />
+                        <img src="/assets/banana.jpg" alt="Fresh Tomatoes" />
                         <div className="item-details">
                             <h2>Golden Banana</h2>
                             <p>Organic Farm</p>
@@ -78,7 +78,7 @@ function ShoppingCart() {
                     </div>
 
                     <div className="cart-item">
-                        <img src="src/assets/banana.jpg" alt="Potatoes" />
+                        <img src="/assets/banana.jpg" alt="Potatoes" />
                         <div className="item-details">
                             <h2>Golden Banana</h2>
                             <p>Organic Farm</p>

@@ -30,25 +30,25 @@ function HomePage() {
                 <ul className="top-links">
                     <li>
                         <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" /><span>Home</span>
+                            <img src="/assets/home.png" alt="mainPage" /><span>Home</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+                            <img src="/assets/shop.png" alt="list" /><span>Shop</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" /><span>Cart</span>
+                            <img src="/assets/cart.png" alt="Cart" /><span>Cart</span>
                         </a>
                     </li>
 
                     <li className="sidebar-item">
                         <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
+                            <img src="/assets/favorite.png" alt="Favorites" />
                             <span className="favorite-text">Favorites ({favorites.length})</span>
                         </Link>
                     </li>
@@ -57,18 +57,18 @@ function HomePage() {
                 <ul className="bottom-links">
                     <li>
                         <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
+                            <img src="/assets/login.jpg" alt="Login" /><span>Login</span></a>
                     </li>
 
                     <li>
                         <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
+                            <img src="/assets/register.jpg" alt="Signup" /><span>Register</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
+                            <img src="/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
                         </a>
                     </li>
                 </ul>
@@ -77,7 +77,7 @@ function HomePage() {
 
             <div className="featured-product">
                 <div className="product-display">
-                    <img src="src/assets/banana.jpg" alt="Featured Product" className="featured-image" />
+                    <img src="/assets/banana.jpg" alt="Featured Product" className="featured-image" />
                     <h2>Product 1</h2>
                     <p>This is product 1</p>
 
@@ -95,7 +95,7 @@ function HomePage() {
 
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(1)}>{favorites.includes(1) ? '❤️' : '♡'}</button>
 
@@ -106,7 +106,7 @@ function HomePage() {
 
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(2)}>{favorites.includes(2) ? '❤️' : '♡'}</button>
 
@@ -115,7 +115,7 @@ function HomePage() {
                     </div>
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(3)}>{favorites.includes(3) ? '❤️' : '♡'}</button>
 
@@ -124,7 +124,7 @@ function HomePage() {
                     </div>
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(4)}>{favorites.includes(4) ? '❤️' : '♡'}</button>
 
@@ -133,7 +133,7 @@ function HomePage() {
                     </div>
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(5)}>{favorites.includes(5) ? '❤️' : '♡'}</button>
 
@@ -142,7 +142,7 @@ function HomePage() {
                     </div>
 
                     <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
+                        <img src="/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
 
                         <button className="favorite-icon" onClick={() => toggleFavorite(6)}>{favorites.includes(6) ? '❤️' : '♡'}</button>
 

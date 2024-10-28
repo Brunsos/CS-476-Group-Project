@@ -10,6 +10,10 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
+    const API_URL = process.env.NODE_ENV === 'production' 
+    ? '/login'
+    : 'http://localhost:5000/login';
+
 const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -34,7 +38,7 @@ const handleLogin = async (e) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,27 +70,27 @@ const handleLogin = async (e) => {
                 <ul className="top-links">
                     <li>
                         <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" />
+                            <img src="/assets/home.png" alt="mainPage" />
                             <span>Home</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+                            <img src="/assets/shop.png" alt="list" /><span>Shop</span>
                         </a>
                     </li>
 
                     <li>
                         <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" />
+                            <img src="/assets/cart.png" alt="Cart" />
                             <span>Cart</span>
                         </a>
                     </li>
 
                     <li>
                         <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
+                            <img src="/assets/favorite.png" alt="Favorites" />
                             <span>Favorites</span>
                         </Link>
                     </li>
@@ -96,19 +100,19 @@ const handleLogin = async (e) => {
                 <ul className="bottom-links">
                     <li>
                         <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" />
+                            <img src="/assets/login.jpg" alt="Login" />
                             <span>Login</span>
                         </a>
                     </li>
                     <li>
                         <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" />
+                            <img src="/assets/register.jpg" alt="Signup" />
                             <span>Register</span>
                         </a>
                     </li>
                     <li>
                         <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" />
+                            <img src="/assets/login.jpg" alt="Vendor" />
                             <span>Vendor</span>
                         </a>
                     </li>
@@ -143,7 +147,7 @@ const handleLogin = async (e) => {
             </div>
 
             <div id="image-container">
-                <img src="src/assets/local.jpg" alt="Featured Product" className="image-container" />
+                <img src="/assets/local.jpg" alt="Featured Product" className="image-container" />
             </div>
         </div>
     );

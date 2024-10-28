@@ -11,27 +11,27 @@ function Shop() {
         <ul>
           <li>
             <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
+              <img src="/assets/home.png" alt="mainPage" />
               <span>Home</span>
             </a>
           </li>
 
           <li>
             <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+              <img src="/assets/shop.png" alt="list" /><span>Shop</span>
             </a>
           </li>
 
           <li>
             <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
+              <img src="/assets/cart.png" alt="Cart" />
               <span>Cart</span>
             </a>
           </li>
 
           <li>
             <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
+              <img src="/assets/favorite.png" alt="Favorites" />
               <span>Favorites</span>
             </Link>
           </li>
@@ -41,18 +41,18 @@ function Shop() {
         <ul className="bottom-links">
           <li>
             <a href="/Login">
-              <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
+              <img src="/assets/login.jpg" alt="Login" /><span>Login</span></a>
           </li>
 
           <li>
             <a href="/Signup">
-              <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
+              <img src="/assets/register.jpg" alt="Signup" /><span>Register</span>
             </a>
           </li>
 
           <li>
             <a href="/Vendor">
-              <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
+              <img src="/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
             </a>
           </li>
 
@@ -88,7 +88,7 @@ function Shop() {
         <section id="product-container">
 
           <div className="product-card">
-            <img src="src/assets/banana.jpg" alt="banana" />
+            <img src="/assets/banana.jpg" alt="banana" />
             <h2>Banana</h2>
             <p>$249</p>
             <h3>The Banana information</h3>
@@ -96,7 +96,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/tomato.jpg" alt="tomato" />
+            <img src="/assets/tomato.jpg" alt="tomato" />
             <h2>Tomato</h2>
             <p>$249</p>
             <h3>The Tomato information</h3>
@@ -104,7 +104,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/yam.jpg" alt="yam" />
+            <img src="/assets/yam.jpg" alt="yam" />
             <h2>Yam</h2>
             <p>$249</p>
             <h3>The Yam information</h3>
@@ -112,7 +112,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/potato.jpg" alt="potato" />
+            <img src="/assets/potato.jpg" alt="potato" />
             <h2>Potato</h2>
             <p>$249</p>
             <h3>The Potato information</h3>
@@ -120,7 +120,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/banana.jpg" alt="banana" />
+            <img src="/assets/banana.jpg" alt="banana" />
             <h2>Banana</h2>
             <p>$249</p>
             <h3>The Banana information</h3>
@@ -128,7 +128,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/tomato.jpg" alt="tomato" />
+            <img src="/assets/tomato.jpg" alt="tomato" />
             <h2>Tomato</h2>
             <p>$249</p>
             <h3>The Tomato information</h3>
@@ -136,7 +136,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/yam.jpg" alt="yam" />
+            <img src="/assets/yam.jpg" alt="yam" />
             <h2>Yam</h2>
             <p>$249</p>
             <h3>The Yam information</h3>
@@ -144,7 +144,7 @@ function Shop() {
           </div>
 
           <div className="product-card">
-            <img src="src/assets/potato.jpg" alt="potato" />
+            <img src="/assets/potato.jpg" alt="potato" />
             <h2>Potato</h2>
             <p>$249</p>
             <h3>The Potato information</h3>
