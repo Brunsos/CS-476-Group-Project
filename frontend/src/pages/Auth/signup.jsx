@@ -31,6 +31,9 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setErrors({});
+
     const newErrors = {};
 
     if (!userName.trim()) {
@@ -85,7 +88,11 @@ const Signup = () => {
     
       if (response.status === 201) {
         navigate('/login');
-      } else {
+      } 
+      else if(response.status === 400) {
+        setErrors(data.errors);
+      }
+      else {
         alert(data.msg || 'Error during registration');
       }
     } catch (error) {

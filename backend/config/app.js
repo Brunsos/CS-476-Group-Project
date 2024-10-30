@@ -28,7 +28,13 @@ app.post("/signup", async (req, res) => {
         return res.status(400).json({ msg: 'Passwords do not match' });
     }
 
+    
     try {
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            errors.confirmPassword = 'Passwords do not match';
+        }
+
         // Check if the user already exists
         let buyer = await Buyer.findOne({ email });
         if (buyer) return res.status(400).json({ msg: 'Buyer already exists' });
@@ -58,6 +64,7 @@ app.post("/signup", async (req, res) => {
 // Login Route
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
+    let errors = {};
 
     try {
         // Find the user by email
@@ -79,9 +86,12 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 app.use((err, res) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).send({ error: err.message });
 });
 
 export default app;
