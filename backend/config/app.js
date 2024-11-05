@@ -79,14 +79,25 @@ app.post("/login", async (req, res) => {
         // Find the user by email
         const buyer = await Buyer.findOne({ email });
         const vendor = await Vendor.findOne({ email });
-
-        if (!buyer || !vendor) {
-            errors.email = 'Invalid email';
+        
+        // If a buyer account was found proceeed to the next step
+        if (buyer) {
+            // Compare the provided password
+            if (password !== buyer.password ) {
+                errors.password = 'Invalid password';
+            }
+        }
+        
+        // If a vendor account was found proceeed to the next step
+        if(vendor){
+            // Compare the provided password
+            if(password !== vendor.password){
+                errors.password = 'Invalid password';
+            }
         }
 
-        // Compare the provided password
-        if (password !== buyer.password || password !== vendor.password) {
-            errors.password = 'Invalid password';
+        if (!buyer && !vendor){
+            errors.email = 'Invalid email';
         }
 
         if (Object.keys(errors).length > 0) {

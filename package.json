@@ -14,10 +14,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "dependencies": "^0.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-async-handler": "^1.2.0",
@@ -29,6 +31,7 @@
     "nodemon": "^3.1.7",
     "react-router-dom": "^6.26.2",
     "react-slick": "^0.30.2",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "vite": "^5.4.10"
   }
 }
