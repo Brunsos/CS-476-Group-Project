@@ -150,20 +150,33 @@ app.get('/api/plants', async (req, res) => {
     try {
         const plants = await Plant.find({});
 
-        const plant = await Plant.findOne({});
-        console.log('Image data:', plant.image.toString('base64'));
-
-        const plantsWithImages = plants.map(plant => ({
-                ...plant.toObject(),
-                image: plant.image.toString('base64')
+        const plantsImages = plants.map(plant => ({
+            ...plant.toObject(),
+            image: plant.image.toString('base64')
         }));
 
-        res.json(plantsWithImages);
+        res.json(plantsImages);
     } catch (error) {
         console.error('Error fetching plants:', error);
         res.status(500).json({ error: 'Failed to fetch plants' });
     }
 });
+
+app.get("/product/:id", async (req, res) => {
+    try {
+        const product = await Plant.findById(req.params.id);
+        console.log(product);
+
+        const productImages = {
+            ...product.toObject(),
+            image: product.image.toString('base64')
+        };
+        
+        res.json(productImages);
+    } catch (error) {
+      res.status(500).send({ message: "Error fetching product" });
+    }
+  });
 
 app.use((err, res) => {
     console.error(err.stack);

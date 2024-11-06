@@ -1,9 +1,34 @@
 import './css/product.css';
 import './css/sidebar.css';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 
 function ProductPage() {
+  const { id } = useParams();
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/product/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProduct(data);
+        } else {
+          console.error("Product not found");
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (!product) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="page-container">
@@ -11,27 +36,27 @@ function ProductPage() {
         <ul>
           <li>
             <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
+              <img src="http://localhost:5173/src/assets/home.png" alt="mainPage" />
               <span>Home</span>
             </a>
           </li>
 
           <li>
             <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
+              <img src="http://localhost:5173/src/assets/shop.png" alt="list" /><span>Shop</span>
             </a>
           </li>
 
           <li>
             <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
+              <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
               <span>Cart</span>
             </a>
           </li>
 
           <li>
             <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
+              <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />
               <span>Favorites</span>
             </Link>
           </li>
@@ -41,17 +66,17 @@ function ProductPage() {
         <ul className="bottom-links">
           <li>
             <a href="/Login">
-              <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
+              <img src="http://localhost:5173/src/assets/login.jpg" alt="Login" /><span>Login</span></a>
           </li>
 
           <li>
             <a href="/Signup">
-              <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
+              <img src="http://localhost:5173/src/assets/register.jpg" alt="Signup" /><span>Register</span>
             </a>
           </li>
           <li>
             <a href="/Vendor">
-              <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
+              <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
             </a>
           </li>
         </ul>
@@ -59,21 +84,20 @@ function ProductPage() {
 
       <div id="product-page">
         <div id="product-container">
+
           <div id="product-image">
-            <img src="src/assets/banana.jpg" alt="banana" />
+            <img src={`data:image/jpeg;base64,${product.image}`} alt={product.common_name} />
           </div>
           <div id="product-details">
-            <h1>The best product in Regina</h1>
-            <p>
-              The information about our proudct
-            </p>
-            <h2>$249</h2>
+            <h1>{product.common_name}</h1>
+            <p>{product.description}</p>
+            <h2>Price: ${product.price}</h2>
 
             <ul>
-              <li>Original from: Regina</li>
+              <li>{product.original}</li>
               <li>Ratings: 0</li>
-              <li>Quantity: 87</li>
-              <li>In Stock: 125</li>
+              <li>{product.quantity}</li>
+              <li>{product.countInStock}</li>
             </ul>
             <button className="add-to-cart-button">Add To Cart</button>
           </div>

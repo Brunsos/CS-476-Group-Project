@@ -101,12 +101,11 @@ function HomePage() {
                     {plants.map(plant => (
                         <div key={plant._id} className="special-product-card">
                             <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
-
-                            <Link to="/product" className='special-product-name'>{plant.common_name}</Link>
+                            <Link to={`/product/${plant._id}`} key={plant._id} className='special-product-name'>{plant.common_name}</Link>
                             <p>{plant.description}</p>
                             <p className="product-price">Price: ${plant.price}</p>
-                    </div>
-                ))}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
