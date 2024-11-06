@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import User from "./user.js";  // Import the User model
-import Plant from "./plant.js";
+import User from "./db/user.js";
+import Plant from "./db/plant.js";
 import cors from "cors";
 import multer from 'multer';
 
@@ -96,9 +96,18 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
     console.log(req.body);
     
     try{
-        const { image, common_name, price, quantity, original, description, countInStock } = req.body;
+        const { common_name, price, quantity, original, description, countInStock } = req.body;
         
-        let plant = new Plant({ image, common_name, price, quantity, original, description, countInStock });
+        const plant = new Plant({
+            image: req.file.buffer,
+            common_name,
+            price,
+            quantity,
+            original,
+            description,
+            countInStock,
+        });
+
         await plant.save();
         res.status(200).json({ msg: 'Plant registered successfully' });
        //console.log(res.status(202));
@@ -109,6 +118,31 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
     }
 
 });
+
+app.get('/api/plants', async (req, res) => {
+    console.log('GET /api/plants route called');
+    try {
+        const plants = await Plant.find({});
+
+        const plant = await Plant.findOne({});
+        console.log('Image data:', plant.image.toString('base64'));
+
+        const plantsWithImages = plants.map(plant => ({
+            //return {
+                // ...plant._doc,
+                ...plant.toObject(),
+                image: plant.image.toString('base64')
+                //image: plant.image ? plant.image.toString('base64') : null
+            //};
+        }));
+
+        res.json(plantsWithImages);
+    } catch (error) {
+        console.error('Error fetching plants:', error);
+        res.status(500).json({ error: 'Failed to fetch plants' });
+    }
+});
+
 app.use((err, res) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
