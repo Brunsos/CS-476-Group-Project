@@ -98,71 +98,15 @@ function HomePage() {
             <div className="special-products">
                 <div className="special-product-list">
 
-                {plants.map(plant => (
-                    <div key={plant._id} className="special-product-card">
-                        <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
+                    {plants.map(plant => (
+                        <div key={plant._id} className="special-product-card">
+                            <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
 
-                        <Link to="/product" className='special-product-name'>{plant.common_name}</Link>
-                        <p>{plant.description}</p>
-                        <p className="product-price">Price: ${plant.price}</p>
+                            <Link to="/product" className='special-product-name'>{plant.common_name}</Link>
+                            <p>{plant.description}</p>
+                            <p className="product-price">Price: ${plant.price}</p>
                     </div>
                 ))}
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(1)}>{favorites.includes(1) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(2)}>{favorites.includes(2) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(3)}>{favorites.includes(3) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(4)}>{favorites.includes(4) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(5)}>{favorites.includes(5) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-                    <div className="special-product-card">
-                        <img src="/src/assets/banana.jpg" alt="Special Product 1" className="special-product-image" />
-
-                        <button className="favorite-icon" onClick={() => toggleFavorite(6)}>{favorites.includes(6) ? '❤️' : '♡'}</button>
-
-                        <Link to="/product" className="special-product-name">Special Product 1</Link>
-                        <p className="product-price">$20</p>
-                    </div>
-
-
                 </div>
             </div>
         </div>
