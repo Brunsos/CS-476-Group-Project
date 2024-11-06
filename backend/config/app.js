@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import User from "./db/user.js";
-import Plant from "./db/plant.js";
+import User from "../db/user.js";
+import Plant from "../db/plant.js";
 import cors from "cors";
 import multer from 'multer';
 
@@ -99,7 +99,7 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
         const { common_name, price, quantity, original, description, countInStock } = req.body;
         
         const plant = new Plant({
-            image: req.file.buffer,
+            image: req.file ? req.file.buffer : null,
             common_name,
             price,
             quantity,
@@ -128,12 +128,8 @@ app.get('/api/plants', async (req, res) => {
         console.log('Image data:', plant.image.toString('base64'));
 
         const plantsWithImages = plants.map(plant => ({
-            //return {
-                // ...plant._doc,
                 ...plant.toObject(),
                 image: plant.image.toString('base64')
-                //image: plant.image ? plant.image.toString('base64') : null
-            //};
         }));
 
         res.json(plantsWithImages);
