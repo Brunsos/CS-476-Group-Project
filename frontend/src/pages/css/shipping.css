@@ -71,3 +71,45 @@ input[type="text"] {
 .continue-button:hover {
   background-color: #e91e63;
 }
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.payment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.payment-button img {
+  width: 25px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.payment-button span {
+  color: #333;
+}
+
+.payment-button.selected {
+  border-color: #0070ba; 
+  background-color: #e7f3ff; 
+}
+
+.payment-button:hover {
+  border-color: #0070ba;
+}
