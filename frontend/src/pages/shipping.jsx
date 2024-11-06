@@ -2,23 +2,41 @@ import './css/shipping.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Card from './card.jsx';
 
 const Shipping = () => {
     const navigate = useNavigate();
-    const [paymentMethod, setPaymentMethod] = useState('PayPal');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState('');
 
     const handleContinue = (e) => {
         e.preventDefault();
-        navigate('/placeorder');
+        console.log("Form submitted");
+
+
+        if (paymentMethod === 'PayPal') {
+            window.location.href = 'https://www.paypal.com/signin?locale.x=en_CA';
+        } else {
+            navigate('/placeOrder');
+        }
     };
 
-    const handlePaymentChange = (e) => {
-        setPaymentMethod(e.target.value);
+    const handlePaymentChange = (method) => {
+        setPaymentMethod(method);
+        if (method === 'Debit') {
+            setIsModalOpen(true);
+        }
     };
+
+    const closeCard = () => {
+        setIsModalOpen(false);
+    };
+
 
     return (
         <div className="page-container">
             <div className="sidebar">
+
                 <ul>
                     <li>
                         <a href="/mainPage">
@@ -78,23 +96,37 @@ const Shipping = () => {
 
                 <h2>Shipping</h2>
                 <form className="shipping-form" onSubmit={handleContinue}>
-                    <input type="text" placeholder="Enter address" required />
+                    <input type="text" placeholder="Enter country" required />
                     <input type="text" placeholder="Enter city" required />
                     <input type="text" placeholder="Enter postal code" required />
-                    <input type="text" placeholder="Enter country" required />
+                    <input type="text" placeholder="Enter address" required />
+
+
 
                     <div className="payment-method">
-                        <label>Select Method</label>
-                        <input type="radio" id="paypal" name="method" value="PayPal" checked={paymentMethod === 'PayPal'}onChange={handlePaymentChange}/>
-                        <label htmlFor="paypal">PayPal or Credit Card</label>
+                        <h3>Select Payment Method</h3>
+                        <div className="payment-options">
+                            <button type="button" className={`payment-button ${paymentMethod === 'PayPal' ? 'selected' : ''}`} onClick={() => handlePaymentChange('PayPal')}>
+                                <img src="/src/assets/paypal.jpg" alt="PayPal" />
+                                <span>PayPal</span>
+                            </button>
+
+                            <button type="button" className={`payment-button ${paymentMethod === 'Debit' ? 'selected' : ''}`} onClick={() => handlePaymentChange('Debit')}>
+                                <img src="/src/assets/wallet.png" alt="Debit or Credit Card" />
+                                <span>Debit or Credit Card</span>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" className="continue-button">Continue</button>
                 </form>
+
+                <Card isOpen={isModalOpen} onClose={closeCard} />
             </div>
         </div>
     );
 };
 
 export default Shipping;
+
 
