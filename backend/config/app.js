@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import User from "../db/user.js";
+import Buyer from "../db/buyer.js";  // Import the Buyer model
+import Vendor from "../db/vendor.js"; // Import the Vendor model
 import Plant from "../db/plant.js";
 import cors from "cors";
 import multer from 'multer';
@@ -17,9 +18,9 @@ app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+.catch(err => console.error(err));
 
-  // store image from vendor ******************************************
+// store image from vendor ******************************************
 
 
 // ****************************************************************************
@@ -28,8 +29,12 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connecte
 app.post("/signup", async (req, res) => {
     console.log(req.body);
 
-    const { userName, email, password, confirmPassword } = req.body;
-    let errors = {};
+    const { userName, email, password, confirmPassword, province, city, address, isVendor } = req.body;
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+        return res.status(400).json({ msg: 'Passwords do not match' });
+    }
 
     
     try {
@@ -39,23 +44,31 @@ app.post("/signup", async (req, res) => {
         }
 
         // Check if the user already exists
-        let user = await User.findOne({ email });
-        if (user) errors.email = 'User already exist'
+        let buyer = await Buyer.findOne({ email });
+        if (buyer) return res.status(400).json({ msg: 'Buyer already exists' });
+        
+        let vendor = await Vendor.findOne({ email });
+        if (vendor) return res.status(400).json({ msg: 'Vendor already exists' });
 
-        if (Object.keys(errors).length > 0) {
-            return res.status(400).json({ errors });
+        // Create and save the new vendor or buyer
+        if (isVendor == 'true'){
+            
+            vendor = new Vendor({userName, email, password, province, city, address, isVendor});
+            await vendor.save();
+            res.status(201).json({ msg: 'Vendor registered successfully' });
         }
         else{
-            user = new User({ userName, email, password });
-            await user.save();
-            res.status(201).json({ msg: 'User registered successfully' });
+            
+            buyer = new Buyer({ userName, email, password, province, city, address });
+            await buyer.save();
+            res.status(201).json({ msg: 'Buyer registered successfully' });
         }
-        // Create and save the new user
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 });
+
 
 // Login Route
 app.post("/login", async (req, res) => {
@@ -64,14 +77,27 @@ app.post("/login", async (req, res) => {
 
     try {
         // Find the user by email
-        const user = await User.findOne({ email });
-        if (!user) {
-            errors.email = 'Invalid email';
+        const buyer = await Buyer.findOne({ email });
+        const vendor = await Vendor.findOne({ email });
+        
+        // If a buyer account was found proceeed to the next step
+        if (buyer) {
+            // Compare the provided password
+            if (password !== buyer.password ) {
+                errors.password = 'Invalid password';
+            }
+        }
+        
+        // If a vendor account was found proceeed to the next step
+        if(vendor){
+            // Compare the provided password
+            if(password !== vendor.password){
+                errors.password = 'Invalid password';
+            }
         }
 
-        // Compare the provided password
-        if (password !== user.password) {
-            errors.password = 'Invalid password';
+        if (!buyer && !vendor){
+            errors.email = 'Invalid email';
         }
 
         if (Object.keys(errors).length > 0) {
