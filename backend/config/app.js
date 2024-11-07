@@ -59,7 +59,7 @@ app.post("/signup", async (req, res) => {
         }
         else{
             
-            buyer = new Buyer({ userName, email, password, province, city, address });
+            buyer = new Buyer({ userName, email, password, province, city, address, isVendor });
             await buyer.save();
             res.status(201).json({ msg: 'Buyer registered successfully' });
         }

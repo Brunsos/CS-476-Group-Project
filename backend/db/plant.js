@@ -7,8 +7,8 @@ const plantSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
   original: { type: String, required: true },
-  description: { type: String, reuired: true },
-  countInStock: { type: Number, reuired: true }
+  description: { type: String, required: true },
+  countInStock: { type: Number, required: true }
 
 });
 
