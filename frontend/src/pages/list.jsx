@@ -1,29 +1,28 @@
 import './css/list.css';
 import './css/sidebar.css';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 function Shop() {
   const [plants, setPlants] = useState([]);
 
   useEffect(() => {
-    const fetchPlants = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/api/plants');
-            if (!response.ok) throw new Error('Failed to fetch plants');
-            const data = await response.json();
-            
-            console.log("Fetched plant data:", data);
-            console.log("Plant image data:", data.map(plant => plant.image));
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/plants');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
 
-            setPlants(data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
+        console.log("Fetched plant data:", data);
+        console.log("Plant image data:", data.map(plant => plant.image));
+
+        setPlants(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
     };
-    fetchPlants();
-}, []);
+    fetchProducts();
+  }, []);
 
   return (
 
@@ -108,19 +107,22 @@ function Shop() {
         </aside>
 
         <section id="product-container">
-
           {plants.map(plant => (
             <div key={plant._id} className="product-card">
-              <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
-              <h2>{plant.common_name}</h2>
-              <p>Price: ${plant.price}</p>
-              <h3>{plant.description}</h3>
-              <Link to={`/product/${plant._id}`} key={plant._id} className='read-more-button'>Read More</Link>
+              <div className="product-image-container">
+                <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.name} className="product-image" />
+              </div>
+
+              <h2 className="product-title">{plant.name}</h2>
+
+              <div className="product-description-container">
+                <p>{plant.description}</p>
+              </div>
+
+              <p className="product-price">Price: ${plant.price}</p>
+              <button className="read-more-button">Add to cart</button>
             </div>
           ))}
-
-          
-
         </section>
       </div>
     </div>
