@@ -59,7 +59,9 @@ app.post("/signup", async (req, res) => {
         }
         else{
             
-            buyer = new Buyer({ userName, email, password, province, city, address, isVendor });
+
+            buyer = new Buyer({ userName, email, password, province, city, address, isVendor});
+
             await buyer.save();
             res.status(201).json({ msg: 'Buyer registered successfully' });
         }
@@ -122,16 +124,17 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
     console.log(req.body);
     
     try{
-        const { common_name, price, quantity, original, description, countInStock } = req.body;
+        const { common_name, price, ecozone, description, countInStock, ratingSum, ratingCount } = req.body;
         
         const plant = new Plant({
             image: req.file ? req.file.buffer : null,
             common_name,
             price,
-            quantity,
-            original,
+            ecozone,
             description,
             countInStock,
+            ratingSum,
+            ratingCount,
         });
 
         await plant.save();
@@ -175,6 +178,17 @@ app.get("/product/:id", async (req, res) => {
         res.json(productImages);
     } catch (error) {
       res.status(500).send({ message: "Error fetching product" });
+    }
+  });
+
+  app.delete('/api/plants/:id', async (req, res) => {
+    try {
+      const deletedPlant = await Plant.findByIdAndDelete(req.params.id);
+      if (!deletedPlant) return res.status(404).json({ message: 'Plant not found' });
+      res.status(200).json({ message: 'Plant deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting plant:', error);
+      res.status(500).json({ error: 'Failed to delete plant' });
     }
   });
 
