@@ -10,8 +10,7 @@ const VendorPost = () => {
   const [image, setimage] = useState(null);
   const [common_name, setcommon_name] = useState('');
   const [price, setprice] = useState('');
-  const [quantity, setquantity] = useState('');
-  const [original, setoriginal] = useState('');
+  const [ecozone, setecozone] = useState('');
   const [description, setdescription] = useState('');
   const [countInStock, setcountInStock] = useState('');
   const [errors, setErrors] = useState({});
@@ -21,8 +20,7 @@ const VendorPost = () => {
     const { name, value } = e.target;
     if (name === 'common_name') setcommon_name(value);
     if (name === 'price') setprice(value);
-    if (name === 'quantity') setquantity(value);
-    if (name === 'original') setoriginal(value);
+    if (name === 'ecozone') setecozone(value);
     if (name === 'description') setdescription(value);
     if (name === 'countInStock') setcountInStock(value);
   };
@@ -34,33 +32,11 @@ const VendorPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // setErrors({});
-
-    // let newErrors = {};
-
-    // if (!image.trim()) {
-    //   newErrors.image = 'Image is required.';
-    // }
-
-    // if (!common_name.trim()) {
-    //   newErrors.common_name = 'Product name is required.';
-    // }
-
-    // if (!price.trim()) {
-    //   newErrors.price = 'Price is required.';
-    // }
-
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   return;
-    // }
-
     const formData = new FormData();
     formData.append('image', image);
     formData.append('common_name', common_name);
     formData.append('price', price);
-    formData.append('quantity', quantity);
-    formData.append('original', original);
+    formData.append('ecozone', ecozone);
     formData.append('description', description);
     formData.append('countInStock', countInStock);
     
@@ -120,15 +96,9 @@ const VendorPost = () => {
 
           <div className="input-group">
             <div className="input-field">
-              <label htmlFor="quantity">Quantity</label>
-              <input type="number" id="quantity" name="quantity" onChange={handleChange} />
-              {errors.quantity && <span className="error">{errors.quantity}</span>}
-            </div>
-
-            <div className="input-field">
-              <label htmlFor="original">Original from</label>
-              <input type="text" id="original" name="original" onChange={handleChange} />
-              {errors.original && <span className="error">{errors.original}</span>}
+              <label htmlFor="ecozone">Ecozone</label>
+              <input type="text" id="ecozone" name="ecozone" onChange={handleChange} />
+              {errors.ecozone && <span className="error">{errors.ecozone}</span>}
             </div>
           </div>
 
@@ -144,16 +114,6 @@ const VendorPost = () => {
               <input type="number" id="countInStock" name="countInStock" onChange={handleChange} />
               {errors.countInStock && <span className="error">{errors.countInStock}</span>}
             </div>
-          </div>
-
-          <div className="input-field">
-              <label htmlFor="category">Category</label>
-              <select id="category" name="category">
-                <option value="tomato">tomato</option>
-                <option value="yam">yam</option>
-                <option value="Potato">potato</option>
-                <option value="banana">banana</option>
-              </select>
           </div>
 
           <button type="submit" className="submit-btn">Submit</button>

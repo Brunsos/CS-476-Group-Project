@@ -159,8 +159,12 @@ const Signup = () => {
             <label htmlFor="isVendor">Are you a vendor?</label>
             <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange} />
           </p>
+
           <p className="input-field">
             <button type="submit">Signup</button>
+          </p>
+
+          <p className="login-prompt"> Already have an account? <a href="/login" className="login-link">Login</a>
           </p>
         </form>
       </div>
