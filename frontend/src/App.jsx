@@ -10,6 +10,7 @@ import Cart from './pages/cart.jsx';
 import Shipping from './pages/shipping.jsx';
 import PlaceOrder from './pages/placeOrder.jsx';
 import Favorite from './pages/favorite.jsx';
+import ProfilePage from './pages/profilePage.jsx';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/placeorder" element={<PlaceOrder />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

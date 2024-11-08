@@ -2,6 +2,7 @@ import './css/cart.css';
 import './css/sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Sidebar from './sidebar';
 
 function ShoppingCart() {
     const navigate = useNavigate();
@@ -13,50 +14,7 @@ function ShoppingCart() {
     return (
         <div className="cart-container">
             <div className="sidebar">
-                <ul>
-                    <li>
-                        <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" />
-                            <span>Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" />
-                            <span>Cart</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
-                            <span>Favorites</span>
-                        </Link>
-                    </li>
-                </ul>
-
-                <ul className="bottom-links">
-                    <li>
-                        <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
-                    </li>
-
-                    <li>
-                        <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
-                        </a>
-                    </li>
-                </ul>
+                <Sidebar />
             </div>
 
             <div className="form-container">
