@@ -6,10 +6,6 @@ import React, { useState, useEffect } from 'react';
 function Shop() {
   const [plants, setPlants] = useState([]);
 
-  // const addToCart = (product) => {
-  //   setCart((prevCart) => [...prevCart, product]);
-  // };
-
   const addToCart = async (plant) => {
     try {
       const response = await fetch('http://localhost:5000/api/addcart', {

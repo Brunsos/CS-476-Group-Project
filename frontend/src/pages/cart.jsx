@@ -127,13 +127,7 @@ function ShoppingCart() {
 
                     {items.length > 0 ? (items.map(item => (
                         <div key={item._id} className="cart-item">
-                            {/* <img src={item.imageUrl || 'placeholder.jpg'} alt={item.name} onLoad={(e) => { console.log("Image loaded for item:", item); handleImageLoad(item.plantId, e); }}
-                            /> */}
-
-                            <img 
-                                src={imageUrls[item.plantId] || 'placeholder.jpg'}
-                                alt={item.name}
-                            />
+                            <img src={imageUrls[item.plantId] || 'placeholder.jpg'} alt={item.name}/>
 
                             <div className="item-details">
                                 <h2>{item.name}</h2>
