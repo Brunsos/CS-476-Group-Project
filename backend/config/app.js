@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import Buyer from "../db/buyer.js";  // Import the Buyer model
 import Vendor from "../db/vendor.js"; // Import the Vendor model
 import Plant from "../db/plant.js";
+import Cart from "../db/cart.js"
 import cors from "cors";
 import multer from 'multer';
 
@@ -19,11 +20,6 @@ app.use(cors());
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
-
-// store image from vendor ******************************************
-
-
-// ****************************************************************************
 
 // Signup route
 app.post("/signup", async (req, res) => {
@@ -127,7 +123,7 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
         const { common_name, price, ecozone, description, countInStock, ratingSum, ratingCount } = req.body;
         
         const plant = new Plant({
-            image: req.file ? req.file.buffer : null,
+            image: req.file.buffer,
             common_name,
             price,
             ecozone,
@@ -165,10 +161,11 @@ app.get('/api/plants', async (req, res) => {
     }
 });
 
+// retrieve image
 app.get("/product/:id", async (req, res) => {
     try {
         const product = await Plant.findById(req.params.id);
-        console.log(product);
+        console.log("this is product information: ",product);
 
         const productImages = {
             ...product.toObject(),
@@ -181,16 +178,79 @@ app.get("/product/:id", async (req, res) => {
     }
   });
 
-  app.delete('/api/plants/:id', async (req, res) => {
+app.delete('/api/plants/:id', async (req, res) => {
     try {
-      const deletedPlant = await Plant.findByIdAndDelete(req.params.id);
-      if (!deletedPlant) return res.status(404).json({ message: 'Plant not found' });
-      res.status(200).json({ message: 'Plant deleted successfully' });
+        const deletedPlant = await Plant.findByIdAndDelete(req.params.id);
+        if (!deletedPlant) return res.status(404).json({ message: 'Plant not found' });
+            res.status(200).json({ message: 'Plant deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting plant:', error);
+        res.status(500).json({ error: 'Failed to delete plant' });
+        }
+});
+    
+app.post('/api/addcart', async (req, res) => {
+    const { plantId, name, price, quantity } = req.body;
+    console.log("i am in the addcart");
+    
+    try {
+        const item = await Cart.create({
+            plantId,
+            name,
+            price
+        });
+        await item.save();
+        console.log("this is item content: ",item);
+        res.status(200).json(item);
     } catch (error) {
-      console.error('Error deleting plant:', error);
-      res.status(500).json({ error: 'Failed to delete plant' });
+        res.status(500).json({ message: "Error adding product to cart", error });
     }
-  });
+});
+
+app.get('/api/cart', async (req, res) => {
+    try {
+        console.log("inside the cart");
+        const cartItems = await Cart.find({});
+    
+        res.status(200).json(cartItems);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving cart", error });
+    }
+});
+
+    // retrieve single image
+app.get('/image/:id', async (req, res) => {
+    console.log("Inside get image route, id:", req.params.id);
+
+    try {
+        const plant = await Plant.findById(req.params.id);
+
+        console.log("Found plant:", plant ? "yes" : "no");
+
+        if (plant && plant.image) {
+            const imageBuffer = Buffer.from(plant.image.toString('base64'), 'base64');
+            res.set('Content-Type', 'image/jpeg');
+            res.send(imageBuffer);
+        } else {
+            console.log("No plant or image found");
+            res.status(404).send("Image not found");
+        }
+    } catch (err) {
+        res.status(500).send("Server error");
+    }
+});
+
+
+app.delete('/api/cart/item/:id', async (req, res) => {
+    try {
+        const deletedItem = await Cart.findByIdAndDelete(req.params.id);
+        if (!deletedItem) return res.status(404).json({ message: 'Plant not found' });
+            res.status(200).json({ message: 'Plant deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting plant:', error);
+        res.status(500).json({ error: 'Failed to delete plant' });
+        }
+});
 
 app.use((err, res) => {
     console.error(err.stack);

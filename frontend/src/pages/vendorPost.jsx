@@ -31,27 +31,6 @@ const VendorPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // setErrors({});
-
-    // let newErrors = {};
-
-    // if (!image.trim()) {
-    //   newErrors.image = 'Image is required.';
-    // }
-
-    // if (!common_name.trim()) {
-    //   newErrors.common_name = 'Product name is required.';
-    // }
-
-    // if (!price.trim()) {
-    //   newErrors.price = 'Price is required.';
-    // }
-
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   return;
-    // }
-
     const formData = new FormData();
     formData.append('image', image);
     formData.append('common_name', common_name);

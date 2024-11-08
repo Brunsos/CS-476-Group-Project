@@ -6,6 +6,31 @@ import React, { useState, useEffect } from 'react';
 function Shop() {
   const [plants, setPlants] = useState([]);
 
+  // const addToCart = (product) => {
+  //   setCart((prevCart) => [...prevCart, product]);
+  // };
+
+  const addToCart = async (plant) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/addcart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantId: plant._id,
+                name: plant.common_name,
+                price: plant.price
+            })
+        });
+        console.log(`${plant.name} added to cart`);
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+    } catch (error) {
+        console.error("Error adding plant to cart:", error);
+    }
+  };
+
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -110,17 +135,17 @@ function Shop() {
           {plants.map(plant => (
             <div key={plant._id} className="product-card">
               <div className="product-image-container">
-                <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.name} className="product-image" />
+                <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="product-image" />
               </div>
 
-              <h2 className="product-title">{plant.name}</h2>
+              <h2 className="product-title">{plant.common_name}</h2>
 
               <div className="product-description-container">
                 <p>{plant.description}</p>
               </div>
 
               <p className="product-price">Price: ${plant.price}</p>
-              <button className="read-more-button">Add to cart</button>
+              <button onClick={() => addToCart(plant)} className="read-more-button">Add to cart</button>
             </div>
           ))}
         </section>

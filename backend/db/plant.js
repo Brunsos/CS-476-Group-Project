@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const plantSchema = new mongoose.Schema({
-  
   image: { type: Buffer, contentType: String, required: true}, 
   common_name: { type: String, required: true },
   price: { type: Number, required: true },
