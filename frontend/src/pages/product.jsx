@@ -10,6 +10,26 @@ function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
 
+  const addToCart = async (plant) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/addcart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantId: plant._id,
+                name: plant.common_name,
+                price: plant.price
+            })
+        });
+        console.log(`${plant.name} added to cart`);
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+    } catch (error) {
+        console.error("Error adding plant to cart:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -49,16 +69,15 @@ function ProductPage() {
             <h2>Price: ${product.price}</h2>
 
             <ul>
-              <li>{product.original}</li>
-              <li>Ratings: 0</li>
-              <li>{product.quantity}</li>
-              <li>{product.countInStock}</li>
+              <li>From: {product.ecozone}</li>
+              {/* <li>Ratings: 0</li> */}
+              <li>Total number in stock: {product.countInStock}</li>
             </ul>
-            <button className="add-to-cart-button">Add To Cart</button>
+            <button onClick={() => addToCart(product)} className="add-to-cart-button">Add to cart</button>
           </div>
         </div>
 
-        <div id="review-section">
+        {/* <div id="review-section">
           <h2>Write Your Review</h2>
           <form id="review-form">
             <div className="form-field">
@@ -79,7 +98,8 @@ function ProductPage() {
 
             <button type="submit" className="submit-review-button">Submit</button>
           </form>
-        </div>
+        </div> */}
+
       </div>
     </div>
   );

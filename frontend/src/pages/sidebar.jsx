@@ -8,34 +8,34 @@ const Sidebar = () => {
           <ul className="top-links">
               <li>
                   <Link to="/mainPage">
-                      <img src="src/assets/home.png" alt="mainPage" />
+                      <img src="http://localhost:5173/src/assets/home.png" alt="mainPage" />
                       <span>Home</span>
                   </Link>
               </li>
               <li>
                   <Link to="/list">
-                      <img src="src/assets/shop.png" alt="list" />
+                      <img src="http://localhost:5173/src/assets/shop.png" alt="list" />
                       <span>Shop</span>
                   </Link>
               </li>
               <li>
                   <Link to="/cart">
-                      <img src="src/assets/cart.png" alt="Cart" />
+                      <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
                       <span>Cart</span>
                   </Link>
               </li>
-              <li>
+              {/* <li>
                   <Link to="/favorite">
-                      <img src="src/assets/favorite.png" alt="Favorites" />
+                      <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />
                       <span>Favorites</span>
                   </Link>
-              </li>
+              </li> */}
           </ul>
 
           <ul className="bottom-links">
                   <li>
                       <Link to="/profile">
-                          <img src="src/assets/person.png" alt="Profile" />
+                          <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
                           <span>Profile</span>
                       </Link>
                   </li>

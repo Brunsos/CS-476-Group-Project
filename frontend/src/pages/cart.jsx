@@ -91,12 +91,12 @@ function ShoppingCart() {
                                 <h2>{item.name}</h2>
                                 <span className="item-price">${item.price}</span>
                             </div>
-                            <select className="item-quantity">
+                            {/* <select className="item-quantity">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
-                            </select>
-                            <button className="remove-item" onClick={() => handleDelete(item._id)}>🗑️</button>
+                                </select> */}
+                                <button className="remove-item" onClick={() => handleDelete(item._id)}>🗑️</button>
                         </div>
                         ))) : (<p>there is no item yet</p>)
                     }
