@@ -88,58 +88,7 @@ function HomePage() {
 
         <div id="homepage-container">
             <div className="sidebar">
-<<<<<<< HEAD
-                <ul className="top-links">
-                    <li>
-                        <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" /><span>Home</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" /><span>Cart</span>
-                        </a>
-                    </li>
-
-                    <li className="sidebar-item">
-                        <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
-                            <span className="favorite-text">Favorites ({favorites.length})</span>
-                        </Link>
-                    </li>
-                </ul>
-
-                <ul className="bottom-links">
-                    <li>
-                        <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
-                    </li>
-
-                    <li>
-                        <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
-                        </a>
-                    </li>
-                    {isVendor && (
-            <li>
-                <a href="/Vendor">
-                    <img src="src/assets/login.jpg" alt="Vendor" />
-                    <span>Vendor</span>
-                </a>
-            </li>
-        )}
-                </ul>
-                
-=======
                 <Sidebar /> 
->>>>>>> 9fec668494f7a088d56cbe8d75e70697da87a1d3
             </div>
 
             <div className="special-products-header">

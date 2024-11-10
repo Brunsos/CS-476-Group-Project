@@ -4,12 +4,8 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import Buyer from "../db/buyer.js";  // Import the Buyer model
 import Vendor from "../db/vendor.js"; // Import the Vendor model
-<<<<<<< HEAD
-import Plant from "../db/plant.js";  // Import the Plant model
-=======
 import Plant from "../db/plant.js";
 import Cart from "../db/cart.js"
->>>>>>> 9fec668494f7a088d56cbe8d75e70697da87a1d3
 import cors from "cors";
 import multer from 'multer';
 import session from 'express-session';
@@ -46,13 +42,9 @@ app.use(cors({
     mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
     .catch(err => console.error(err));
                 
-
-<<<<<<< HEAD
-=======
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
->>>>>>> 9fec668494f7a088d56cbe8d75e70697da87a1d3
 
 // Signup route
 app.post("/signup", async (req, res) => {
