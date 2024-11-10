@@ -61,12 +61,14 @@ useEffect(() => {
                       <span>Shop</span>
                   </Link>
               </li>
+              {!isVendor && (
               <li>
                   <Link to="/cart">
                       <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
                       <span>Cart</span>
                   </Link>
               </li>
+              )}
               {/* <li>
                   <Link to="/favorite">
                       <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />

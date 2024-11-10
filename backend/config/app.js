@@ -259,7 +259,6 @@ app.get('/api/user-role', (req, res) => {
 });
 
 
-// 2. Modify your login route
 app.post("/login", async (req, res) => {
     console.log('Login attempt with:', req.body);
     
