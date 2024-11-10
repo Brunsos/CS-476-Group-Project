@@ -4,10 +4,13 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
+
 function HomePage() {
     const navigate = useNavigate();
     const [favorites, setFavorites] = useState([]);
     const [plants, setPlants] = useState([]);
+    const [isVendor, setIsVendor] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const goToListPage = () => {
@@ -20,7 +23,42 @@ function HomePage() {
         );
     };
 
+   
+
     useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                // First check localStorage
+                const storedUser = localStorage.getItem('user');
+                if (storedUser) {
+                    const userData = JSON.parse(storedUser);
+                    setIsVendor(userData.isVendor);
+                }
+
+                // Then verify with server
+                const response = await fetch('http://localhost:5000/api/user-role', {
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setIsVendor(data.isVendor);
+                } else if (response.status === 401) {
+                    // Handle unauthorized - clear local storage
+                    localStorage.removeItem('user');
+                    setIsVendor(false);
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                setIsVendor(false);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         const fetchPlants = async () => {
             try {
                 const response = await fetch('http://localhost:5000/api/plants');
@@ -35,8 +73,16 @@ function HomePage() {
                 console.error('Error:', error);
             }
         };
+
         fetchPlants();
+        checkAuth();
     }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    
 
     return (
 
@@ -80,12 +126,14 @@ function HomePage() {
                             <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
                         </a>
                     </li>
-
-                    <li>
-                        <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
-                        </a>
-                    </li>
+                    {isVendor && (
+            <li>
+                <a href="/Vendor">
+                    <img src="src/assets/login.jpg" alt="Vendor" />
+                    <span>Vendor</span>
+                </a>
+            </li>
+        )}
                 </ul>
                 
             </div>
