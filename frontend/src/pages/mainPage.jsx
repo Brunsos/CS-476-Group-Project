@@ -1,7 +1,7 @@
 import './css/mainPage.css';
-import './css/sidebar.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Sidebar from './sidebar';
 import React, { useState, useEffect } from 'react';
 
 
@@ -88,6 +88,7 @@ function HomePage() {
 
         <div id="homepage-container">
             <div className="sidebar">
+<<<<<<< HEAD
                 <ul className="top-links">
                     <li>
                         <a href="/mainPage">
@@ -136,6 +137,9 @@ function HomePage() {
         )}
                 </ul>
                 
+=======
+                <Sidebar /> 
+>>>>>>> 9fec668494f7a088d56cbe8d75e70697da87a1d3
             </div>
 
             <div className="special-products-header">

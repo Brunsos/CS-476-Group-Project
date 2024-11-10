@@ -90,6 +90,7 @@
     width: 100%;
     max-width: 300px;
     text-align: center;
+    cursor: pointer;
   }
 
   .add-to-cart-button:hover {

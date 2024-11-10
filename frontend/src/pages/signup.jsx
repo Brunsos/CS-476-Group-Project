@@ -3,6 +3,7 @@ import './css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Sidebar from './sidebar';
 
 
 const Signup = () => {
@@ -105,53 +106,7 @@ const Signup = () => {
     <div id="signup-container">
 
       <div className="sidebar">
-        <ul>
-          <li>
-            <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
-              <span>Home</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
-              <span>Cart</span>
-            </a>
-          </li>
-
-          <li>
-            <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
-              <span>Favorites</span>
-            </Link>
-          </li>
-
-        </ul>
-
-        <ul className="bottom-links">
-          <li>
-            <a href="/Login">
-              <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
-          </li>
-
-          <li>
-            <a href="/Signup">
-              <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
-            </a>
-          </li>
-          <li>
-            <a href="/Vendor">
-              <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
-            </a>
-          </li>
-        </ul>
+        <Sidebar />
       </div>
 
       <div id="form-container">
@@ -204,8 +159,12 @@ const Signup = () => {
             <label htmlFor="isVendor">Are you a vendor?</label>
             <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange} />
           </p>
+
           <p className="input-field">
             <button type="submit">Signup</button>
+          </p>
+
+          <p className="login-prompt"> Already have an account? <a href="/login" className="login-link">Login</a>
           </p>
         </form>
       </div>
