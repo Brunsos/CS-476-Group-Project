@@ -8,6 +8,8 @@ import Plant from "../db/plant.js";
 import Cart from "../db/cart.js"
 import cors from "cors";
 import multer from 'multer';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 
 dotenv.config();
@@ -15,8 +17,31 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 
-app.use(cors());
-
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
+}));
+            app.use(session({
+                secret: 'U_of_R_Secret_key',
+                resave: false,
+                saveUninitialized: false,
+                store: MongoStore.create({ 
+                    mongoUrl: process.env.MONGO_URI,
+                    ttl: 24 * 60 * 60 // Session TTL in seconds (1 day)
+                }),
+                cookie: { 
+                    maxAge: 24 * 60 * 60 * 1000, // Cookie TTL in milliseconds (1 day)
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'lax',
+                    httpOnly: true
+                }
+            }));
+            
+    mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
+    .catch(err => console.error(err));
+                
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
@@ -68,50 +93,7 @@ app.post("/signup", async (req, res) => {
 });
 
 
-// Login Route
-app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    let errors = {};
 
-    try {
-        // Find the user by email
-        const buyer = await Buyer.findOne({ email });
-        const vendor = await Vendor.findOne({ email });
-        
-        // If a buyer account was found proceeed to the next step
-        if (buyer) {
-            // Compare the provided password
-            if (password !== buyer.password ) {
-                errors.password = 'Invalid password';
-            }
-        }
-        
-        // If a vendor account was found proceeed to the next step
-        if(vendor){
-            // Compare the provided password
-            if(password !== vendor.password){
-                errors.password = 'Invalid password';
-            }
-        }
-
-        if (!buyer && !vendor){
-            errors.email = 'Invalid email';
-        }
-
-        if (Object.keys(errors).length > 0) {
-            return res.status(400).json({ errors });
-        }
-
-        // If successful, return a success message
-        res.status(200).json({ msg: 'Login successful' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ msg: 'Server error' });
-    }
-});
-
-
-// Vender route
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -146,6 +128,7 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
 
 app.get('/api/plants', async (req, res) => {
     console.log('GET /api/plants route called');
+    console.log(req.isVendor);
     try {
         const plants = await Plant.find({});
 
@@ -252,8 +235,87 @@ app.delete('/api/cart/item/:id', async (req, res) => {
         }
 });
 
-app.use((err, res) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+  app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    res.status(500).json({ msg: err.message || 'Internal server error' });
 });
+
+app.get('/api/user-role', (req, res) => {
+    try {
+        console.log('Session data on /api/user-role:', req.session);
+        
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ msg: 'No session found' });
+        }
+
+        res.status(200).json({ 
+            isVendor: req.session.user.isVendor,
+            email: req.session.user.email 
+        });
+    } catch (error) {
+        console.error('Error in /api/user-role:', error);
+        res.status(500).json({ msg: 'Server error checking user role' });
+    }
+});
+
+
+// 2. Modify your login route
+app.post("/login", async (req, res) => {
+    console.log('Login attempt with:', req.body);
+    
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ msg: 'Email and password are required' });
+        }
+
+        const buyer = await Buyer.findOne({ email });
+        const vendor = await Vendor.findOne({ email });
+        
+        let user = null;
+        let isVendor = false;
+
+        if (buyer && password === buyer.password) {
+            user = buyer;
+            isVendor = false;
+        } else if (vendor && password === vendor.password) {
+            user = vendor;
+            isVendor = true;
+        }
+
+        if (!user) {
+            return res.status(401).json({ msg: 'Invalid credentials' });
+        }
+
+        // Set session data with consistent structure
+        req.session.user = {
+            id: user._id,
+            email: user.email,
+            isVendor: isVendor
+        };
+
+        // Save session explicitly
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ msg: 'Session error' });
+            }
+
+            console.log('Session saved successfully:', req.session);
+            res.status(200).json({
+                msg: 'Login successful',
+                user: {
+                    email: user.email,
+                    isVendor: isVendor
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ msg: 'Server error during login' });
+    }
+});
+
 export default app;

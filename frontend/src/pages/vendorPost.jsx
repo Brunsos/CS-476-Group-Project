@@ -3,7 +3,6 @@ import './css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import Sidebar from './sidebar';
 
 
 const VendorPost = () => {
@@ -67,7 +66,6 @@ const VendorPost = () => {
   return (
     <div id="vendor-page">
       <div className="sidebar">
-        <Sidebar />
       </div>
 
       <div className="content">
@@ -115,6 +113,8 @@ const VendorPost = () => {
               {errors.countInStock && <span className="error">{errors.countInStock}</span>}
             </div>
           </div>
+
+
 
           <button type="submit" className="submit-btn">Submit</button>
           
