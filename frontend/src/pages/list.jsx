@@ -1,17 +1,20 @@
 import './css/list.css';
 import './css/sidebar.css';
-import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './sidebar';
 
 function Shop() {
   const [plants, setPlants] = useState([]);
+  const navigate = useNavigate();
 
   const addToCart = async (plant) => {
     try {
       const response = await fetch('http://localhost:5000/api/addcart', {
+
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({
                 plantId: plant._id,
                 name: plant.common_name,
@@ -27,24 +30,48 @@ function Shop() {
     }
   };
 
-
   useEffect(() => {
-    const fetchProducts = async () => {
+    const checkSession = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/user-role', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Not authenticated');
+            }
+
+            const data = await response.json();
+            if (data.isVendor) {
+                // If user is a vendor, redirect to vendor page
+                navigate('/vendor');
+                return;
+            }
+
+            fetchProducts();
+        } catch (error) {
+            console.error("Session check failed:", error);
+            navigate('/login');  // Redirect to login if not authenticated
+        }
+    };
+
+    checkSession();
+}, [navigate]);
+
+  const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/plants');
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
 
-        console.log("Fetched plant data:", data);
-        console.log("Plant image data:", data.map(plant => plant.image));
+        //console.log("Fetched plant data:", data);
+        //console.log("Plant image data:", data.map(plant => plant.image));
 
         setPlants(data);
       } catch (error) {
         console.error('Error:', error);
       }
-    };
-    fetchProducts();
-  }, []);
+  };
 
   return (
 
