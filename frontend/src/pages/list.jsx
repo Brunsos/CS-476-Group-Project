@@ -2,6 +2,7 @@ import './css/list.css';
 import './css/sidebar.css';
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { Children } from 'react';
 
 function Shop() {
   const [plants, setPlants] = useState([]);
@@ -10,12 +11,10 @@ function Shop() {
   // Variables and states for the filter process
   const [plantFilter, setPlantFilter] = useState([]);
   const [brandFilter, setBrandFilter] = useState([]);
-  const [brandNameFilter, setBrandNameFilter] = useState('');
-  const [plantPriceFilter, setPriceFilter] = useState('');
-  const plantNameFilter = [];
+  const [priceFilter, setPriceFilter] = useState([]);
+  const [plantCards, setPlantCards] = useState([]);
 
-
-  // Fetch the lost of plants for the page
+  // Fetch the list of plants for the page
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -49,74 +48,101 @@ function Shop() {
     fetchBrands();
   }, []);
 
-  const handleChange = (e) =>{
-    const { name, value } = e.target;
-    if(name === "plants") {
-      if(plantNameFilter.includes(value)){
-        const arr = [];
-        if(plantNameFilter.length -1 > plantNameFilter.indexOf(value)){
-          let i = plantNameFilter.length - 1;
-          do{
-            arr.push(plantNameFilter.pop());
-          
-            i--;
-            if(i === plantNameFilter.indexOf(value)){
-              // plantNameFilter.pop();
-              do{
-              plantNameFilter.push(arr.pop());
-            } while(arr.length !== 0);
-          }        
-          }while( i !== 0);
-        } else {
-          plantNameFilter.pop();
-        }
-      } else {
-        plantNameFilter.push(value);
-      }
+  
+  useEffect(() => {
+    // Create an empty array to store the filters in
+    let displayed = [];
+    // If the user has set a required price then use that filter
+    if(priceFilter.length !== 0){
+      displayed = priceFilter.filter(plant => plant).map(x => x);
+    }
+    // Set the filter as the list of name wanting to be seen
+    else{
+      displayed = plantFilter.filter(plant => plant).map(x => x);
     }
 
-    console.log(plantNameFilter);
+    // Create an array to store the cards in 
+    let plantsArray = [];
+    // go through every object in the filter
+    for (const value in displayed) {
+      // set "obj" to the object at the current index of the array
+      const obj = displayed.at(value);
+      // Create a variable to store the card for that particular object
+      var plantCard =  (
+      
+      <section key={obj._id} id="product-container">
+        <div className="product-card">
+          <div className="product-image-container">
+            <img src={`data:image/jpeg;base64,${obj.image}`} alt={obj.common_name} className="product-image" />
+          </div>
+
+          <h2 className="product-title">{obj.common_name}</h2>
+
+          <div className="product-description-container">
+            <p>{obj.description}</p>
+          </div>
+
+          <p className="product-price">`Price: ${obj.price}`</p>
+          <button className="read-more-button">Add to cart</button>
+        </div>
+      </section>
+      );
+      // Push the new card onto the array for storage
+    plantsArray.push(plantCard);
   }
+  // set the display of cards to what the array of cards is
+  setPlantCards(plantsArray);
+},[plantFilter, priceFilter]);
   
+  
+  const handleChange = (e) =>{
+    var { name, value } = e.target;
+    if(name === "plants") {
+      // The default is that all the values are already in stored in the state
+      if(plantFilter.some(plant => plant.common_name === value)){
+        //If the user has set a price first then filter based off of that
+        if(priceFilter.length !== 0){
+          // Remove the "value" from the items displayed with the current price filter
+          const priceFirst = priceFilter.filter(price => value !== price.common_name).map(x => x);
+          //set the price filter to the new values
+          setPriceFilter(priceFirst);
+        }
+        // Get rid of the value from the current list of applied filters
+        else{
+        const arr = plantFilter.filter(plant => value !== plant.common_name).map(x => x);
+        setPlantFilter(arr);
+        }
+      }
+      // If the array doesn't have the value then add the value to it
+      else {
+        // This will have all the values of things currently displayed
+        const currFilter = plantFilter.filter(item => value !== item.common_name);
 
-  const filterForPlants = plantFilter.filter((plant) => plant.common_name.includes(plantNameFilter)).map((plant) =>( 
-    <div key={plant._id} className="product-card">
-        <div className="product-image-container">
-          <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.name} className="product-image" />
-        </div>
+        // This will find the missing value from the original imported array of plants
+        const missingV = plants.filter(item => value === item.common_name);
 
-        <h2 className="product-title">{plant.name}</h2>
+        // merge the two together to reupload the "hidden" filter
+        const temp = currFilter.concat(missingV);
 
-        <div className="product-description-container">
-          <p>{plant.description}</p>
-        </div>
-
-        <p className="product-price">Price: ${plant.price}</p>
-        <button className="read-more-button">Add to cart</button>
-      </div>
-    ))
-    
-    
-    // if(plantFilter.forEach((plant) => plant.common_name === plantNameFilter)){
-    //   const filterForPlants = plantFilter.filter((plant) => plant.common_name.includes(!plantNameFilter).map((plant) =>(
-    //     <div key={plant._id} className="product-card">
-    //       <div className="product-image-container">
-    //         <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.name} className="product-image" />
-    //       </div>
-
-    //       <h2 className="product-title">{plant.name}</h2>
-
-    //       <div className="product-description-container">
-    //         <p>{plant.description}</p>
-    //       </div>
-
-    //       <p className="product-price">Price: ${plant.price}</p>
-    //       <button className="read-more-button">Add to cart</button>
-    //     </div>
-    //   )))
-    // }
-    
-    
+        // Set the state to the new values
+        setPlantFilter(temp);
+      } 
+    } 
+    if (name === "price") {
+      // If the filter has prices that are more than the user has entered then proceed
+      if(plantFilter.some(plant => value > plant.price)){
+        // Remove values that are more than the user has selected
+        const newMaxPrice = plantFilter.filter(plant => value >= plant.price).map(x => x);
+        // set the filter to the new values
+        setPriceFilter(newMaxPrice);
+      }
+      else {
+        // If the user wipes the values in the price filter then reset the filter
+        const resetPrice = plants.filter(plant =>  plant.price);
+        setPriceFilter(resetPrice);
+      }
+    }
+  }
   
     return (
     <div className="page-container">
@@ -178,7 +204,7 @@ function Shop() {
           <section id='plants'>
             {plants.map(plant => (
               <div key={plant._id}>
-                <input type="checkbox" name="plants" id="plants" value={plant.common_name} onChange={handleChange}/>
+                <input type="checkbox" name="plants" id="plants" defaultChecked value={plant.common_name} onChange={handleChange}/>
                 <label htmlFor="plants">{plant.common_name}</label>
               </div>
             ))}
@@ -194,13 +220,10 @@ function Shop() {
           </section>
 
           <h1>Filter by Price</h1>
-          <input type="number" placeholder="Enter Price" />
+          <input type="number" placeholder="Enter Price" name="price" onChange={handleChange}/>
           <button className="reset-button">Reset</button>
         </aside>
-
-        <section id="product-container">
-          {filterForPlants}
-        </section>
+        {plantCards}
       </div>
     </div>
   );
