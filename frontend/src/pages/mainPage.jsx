@@ -7,7 +7,6 @@ import React, { useState, useEffect } from 'react';
 
 function HomePage() {
     const navigate = useNavigate();
-    const [favorites, setFavorites] = useState([]);
     const [plants, setPlants] = useState([]);
     const [isVendor, setIsVendor] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
@@ -15,12 +14,6 @@ function HomePage() {
 
     const goToListPage = () => {
         navigate('/list');
-    };
-
-    const toggleFavorite = (productId) => {
-        setFavorites((prevFavorites) => prevFavorites.includes(productId) ?
-            prevFavorites.filter((id) => id !== productId) : [...prevFavorites, productId]
-        );
     };
 
    
@@ -82,8 +75,6 @@ function HomePage() {
         return <div>Loading...</div>;
     }
 
-    
-
     return (
 
         <div id="homepage-container">
@@ -97,23 +88,18 @@ function HomePage() {
             </div>
 
             <div className="special-products">
-    <div className="special-product-list">
-        {plants.map(plant => (
-            <div key={plant.id} className="special-product-card">
-               
-                    <img src={`data:image/jpeg;base64,${plant.image}`}alt={plant.common_name} className="special-product-image"/>
-               
+                <div className="special-product-list">
 
-                <div className="product-details">
-                    <Link to={`/product/${plant.id}`} className="special-product-name">
-                        {plant.common_name}
-                    </Link>
-                    <p className="product-price">Price: ${plant.price}</p>
+                    {plants.map(plant => (
+                        <div key={plant._id} className="special-product-card">
+                            <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
+                            <Link to={`/product/${plant._id}`} key={plant._id} className='special-product-name'>{plant.common_name}</Link>
+                            <p>{plant.description}</p>
+                            <p className="product-price">Price: ${plant.price}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
-        ))}
-    </div>
-</div>
         </div>
     );
 }

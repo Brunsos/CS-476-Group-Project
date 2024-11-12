@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 //import React from 'react';
 import React, { useState, useEffect } from 'react';
 
-
-
-
 const Sidebar = () => {
 
 const [isVendor, setIsVendor] = useState(false)
@@ -67,12 +64,6 @@ useEffect(() => {
                       <span>Cart</span>
                   </Link>
               </li>
-              {/* <li>
-                  <Link to="/favorite">
-                      <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />
-                      <span>Favorites</span>
-                  </Link>
-              </li> */}
           </ul>
 
           <ul className="bottom-links">
@@ -82,10 +73,10 @@ useEffect(() => {
                           <span>Profile</span>
                       </Link>
                   </li>
-                  {isVendor && (
+        {isVendor && (
             <li>
                 <a href="/Vendor">
-                    <img src="src/assets/login.jpg" alt="Vendor" />
+                    <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
                     <span>Vendor</span>
                 </a>
             </li>
