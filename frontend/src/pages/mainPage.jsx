@@ -7,7 +7,6 @@ import React, { useState, useEffect } from 'react';
 
 function HomePage() {
     const navigate = useNavigate();
-    const [favorites, setFavorites] = useState([]);
     const [plants, setPlants] = useState([]);
     const [isVendor, setIsVendor] = useState(false)
     const [isLoading, setIsLoading] = useState(true);
@@ -15,12 +14,6 @@ function HomePage() {
 
     const goToListPage = () => {
         navigate('/list');
-    };
-
-    const toggleFavorite = (productId) => {
-        setFavorites((prevFavorites) => prevFavorites.includes(productId) ?
-            prevFavorites.filter((id) => id !== productId) : [...prevFavorites, productId]
-        );
     };
 
    
@@ -81,8 +74,6 @@ function HomePage() {
     if (isLoading) {
         return <div>Loading...</div>;
     }
-
-    
 
     return (
 
