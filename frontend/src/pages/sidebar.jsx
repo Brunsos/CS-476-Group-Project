@@ -63,6 +63,8 @@ useEffect(() => {
                       <span>Shop</span>
                   </Link>
               </li>
+
+              {!isVendor && (
               {/* only show cart if logged in */}
               {isLoggedIn && (
           <li>
@@ -86,17 +88,38 @@ useEffect(() => {
             </li>
             {isVendor && (
             // only show if user is a vendor
+
               <li>
                 <Link to="/vendor">
                   <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
                   <span>Vendor</span>
                 </Link>
               </li>
+
+              )}
+              {/* <li>
+                  <Link to="/favorite">
+                      <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />
+                      <span>Favorites</span>
+                  </Link>
+              </li> */}
+          </ul>
+
+          <ul className="bottom-links">
+                  <li>
+                      <Link to="/profile">
+                          <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
+                          <span>Profile</span>
+                      </Link>
+                  </li>
+                  {isVendor && (
+
             )}
           </>
         ) : (
           // only show when not logged in
           <>
+
             <li>
               <Link to="/login">
                 <img src="http://localhost:5173/src/assets/login.jpg" alt="Login" />

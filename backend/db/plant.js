@@ -10,7 +10,7 @@ const plantSchema = new mongoose.Schema({
   countInStock: { type: Number, required: true },
   ratingSum: {type: Number, required: false},
   ratingCount: {type: Number, required: false},
-  vendor_id: {type: String, required: false}
+  vendorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Vendor', required: true }
 
 });
 
