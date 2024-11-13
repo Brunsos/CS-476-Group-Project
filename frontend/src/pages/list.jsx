@@ -136,6 +136,17 @@ function Shop() {
         // set the filter to the new values
         setPriceFilter(newMaxPrice);
       }
+      // If the user has selected items that they don't want to see then added a price that they want to see under proceed
+      if(plantFilter.length !== plants.length){
+        // Filter the remaining items based on price
+        const newMaxPrice = plantFilter.filter(plant => value > plant.price).map(x => x);
+        /*
+          If the user selects a value that can't be applied to any of the items in the list it will return the current view. 
+          I am unsure of how to change it so that the users wouldn't see anything, basically a "No Results" view
+        */
+        setPriceFilter(newMaxPrice);
+
+      }
       else {
         // If the user wipes the values in the price filter then reset the filter
         const resetPrice = plants.filter(plant =>  plant.price);
