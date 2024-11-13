@@ -9,7 +9,8 @@ const plantSchema = new mongoose.Schema({
   description: { type: String, required: true },
   countInStock: { type: Number, required: true },
   ratingSum: {type: Number, required: false},
-  ratingCount: {type: Number, required: false}
+  ratingCount: {type: Number, required: false},
+  vendor_id: {type: String, required: false}
 
 });
 

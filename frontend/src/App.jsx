@@ -10,17 +10,17 @@ import Cart from './pages/cart.jsx';
 import Shipping from './pages/shipping.jsx';
 import PlaceOrder from './pages/placeOrder.jsx';
 import Favorite from './pages/favorite.jsx';
+import ProfilePage from './pages/profilePage.jsx';
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Mainpage />} />
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/mainPage" element={<Mainpage />} />
         <Route path="/vendor" element={<Vendor />} />
-        {/* <Route path="/product" element={<Product />} /> */}
         <Route path="/list" element={<List />} />
         <Route path="/vendorPost" element={<VendorPost />} />
         <Route path="/cart" element={<Cart />} />
@@ -28,6 +28,7 @@ const App = () => {
         <Route path="/placeorder" element={<PlaceOrder />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

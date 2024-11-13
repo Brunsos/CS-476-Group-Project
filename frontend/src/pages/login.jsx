@@ -3,6 +3,7 @@ import './css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Sidebar from './sidebar';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -33,29 +34,30 @@ const handleLogin = async (e) => {
       return;
     }
 
-    try {
-      const response = await fetch('http://localhost:5000/login', {
+
+try {
+    const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
+        credentials: 'include', // Important for cookies
         body: JSON.stringify({ email, password }),
-      });
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.status === 200) {
+    if (response.ok) {
+        // Optional: Store user info in localStorage or state management
+        localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/mainPage');
-      } 
-      else if(response.status === 400) {
-        setErrors(data.errors);
-      }
-      else {
-        alert(data.msg || 'Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
+    } else {
+        setErrors(data.errors || { general: data.msg });
     }
+} catch (error) {
+    console.error('Login error:', error);
+    setErrors({ general: 'An error occurred during login' });
+}
 };
 
     return (
@@ -63,61 +65,12 @@ const handleLogin = async (e) => {
         <div id="login-container">
 
             <div className="sidebar">
-                <ul className="top-links">
-                    <li>
-                        <a href="/mainPage">
-                            <img src="src/assets/home.png" alt="mainPage" />
-                            <span>Home</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/list">
-                            <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/cart">
-                            <img src="src/assets/cart.png" alt="Cart" />
-                            <span>Cart</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
-                            <span>Favorites</span>
-                        </Link>
-                    </li>
-
-                </ul>
-
-                <ul className="bottom-links">
-                    <li>
-                        <a href="/Login">
-                            <img src="src/assets/login.jpg" alt="Login" />
-                            <span>Login</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/Signup">
-                            <img src="src/assets/register.jpg" alt="Signup" />
-                            <span>Register</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/Vendor">
-                            <img src="src/assets/login.jpg" alt="Vendor" />
-                            <span>Vendor</span>
-                        </a>
-                    </li>
-                </ul>
+                <Sidebar />
             </div>
 
 
             <div id="form-container">
-                <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+                <form className="login-form" onSubmit={handleLogin}>
 
                     <p className="input-field">
                         <label htmlFor="email">Email address:</label>
@@ -132,7 +85,7 @@ const handleLogin = async (e) => {
                     </p>
 
                     <p className="input-field">
-                        <button type="button" onClick={handleLogin}>Login</button>
+                    <button type="submit">Login</button>
                     </p>
 
                     <p className="login-prompt">

@@ -1,3 +1,4 @@
+
 import './css/list.css';
 import './css/sidebar.css';
 import { Link } from 'react-router-dom';
@@ -239,5 +240,139 @@ function Shop() {
     </div>
   );
 }
+
+=======
+import './css/list.css';
+import './css/sidebar.css';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Sidebar from './sidebar';
+
+function Shop() {
+  const [plants, setPlants] = useState([]);
+  const navigate = useNavigate();
+
+  const addToCart = async (plant) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/addcart', {
+
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                plantId: plant._id,
+                name: plant.common_name,
+                price: plant.price
+            })
+        });
+        console.log(`${plant.name} added to cart`);
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+    } catch (error) {
+        console.error("Error adding plant to cart:", error);
+    }
+  };
+
+  useEffect(() => {
+    const checkSession = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/user-role', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Not authenticated');
+            }
+
+            const data = await response.json();
+            if (data.isVendor) {
+                // If user is a vendor, redirect to vendor page
+                navigate('/vendor');
+                return;
+            }
+
+            fetchProducts();
+        } catch (error) {
+            console.error("Session check failed:", error);
+            navigate('/login');  // Redirect to login if not authenticated
+        }
+    };
+
+    checkSession();
+}, [navigate]);
+
+  const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/plants');
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
+
+        //console.log("Fetched plant data:", data);
+        //console.log("Plant image data:", data.map(plant => plant.image));
+
+        setPlants(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  };
+
+  return (
+
+    <div className="page-container">
+
+      <div className="sidebar">
+        <Sidebar />
+      </div>
+      <div id="shop-page">
+        <aside id="filter-container">
+          <h1>Filter by Categories</h1>
+          <div className="filter-options">
+            <label><input type="checkbox" /> banana</label>
+            <label><input type="checkbox" /> yam</label>
+            <label><input type="checkbox" /> potato</label>
+            <label><input type="checkbox" /> tomato</label>
+            <label><input type="checkbox" /> banana</label>
+            <label><input type="checkbox" /> yam</label>
+          </div>
+
+          <h1>Filter by Brands</h1>
+          <div className="filter-options">
+            <label><input type="checkbox" /> banana</label>
+            <label><input type="checkbox" /> yam</label>
+            <label><input type="checkbox" /> potato</label>
+            <label><input type="checkbox" /> tomato</label>
+            <label><input type="checkbox" /> banana</label>
+            <label><input type="checkbox" /> Apple</label>
+          </div>
+
+          <h1>Filter by Price</h1>
+          <input type="number" placeholder="Enter Price" />
+          <button className="reset-button">Reset</button>
+        </aside>
+
+        <section id="product-container">
+          {plants.map(plant => (
+            <div key={plant._id} className="product-card">
+              <div className="product-image-container">
+                <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="product-image" />
+              </div>
+
+              <h2 className="product-title">{plant.common_name}</h2>
+
+              <div className="product-description-container">
+                <p>{plant.description}</p>
+              </div>
+
+              <p className="product-price">Price: ${plant.price}</p>
+              <button onClick={() => addToCart(plant)} className="read-more-button">Add to cart</button>
+            </div>
+          ))}
+        </section>
+      </div>
+    </div>
+  );
+}
+
 
 export default Shop;

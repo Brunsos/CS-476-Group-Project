@@ -31,27 +31,6 @@ const VendorPost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // setErrors({});
-
-    // let newErrors = {};
-
-    // if (!image.trim()) {
-    //   newErrors.image = 'Image is required.';
-    // }
-
-    // if (!common_name.trim()) {
-    //   newErrors.common_name = 'Product name is required.';
-    // }
-
-    // if (!price.trim()) {
-    //   newErrors.price = 'Price is required.';
-    // }
-
-    // if (Object.keys(newErrors).length > 0) {
-    //   setErrors(newErrors);
-    //   return;
-    // }
-
     const formData = new FormData();
     formData.append('image', image);
     formData.append('common_name', common_name);
@@ -87,35 +66,6 @@ const VendorPost = () => {
   return (
     <div id="vendor-page">
       <div className="sidebar">
-        <ul>
-          <li>
-            <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
-              <span>Home</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
-              <span>Cart</span>
-            </a>
-          </li>
-
-          <li>
-            <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
-              <span>Favorites</span>
-            </Link>
-          </li>
-        </ul>
-
       </div>
 
       <div className="content">
@@ -163,6 +113,8 @@ const VendorPost = () => {
               {errors.countInStock && <span className="error">{errors.countInStock}</span>}
             </div>
           </div>
+
+
 
           <button type="submit" className="submit-btn">Submit</button>
           

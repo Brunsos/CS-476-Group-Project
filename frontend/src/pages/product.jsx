@@ -3,11 +3,32 @@ import './css/sidebar.css';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Sidebar from './sidebar';
 
 
 function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState([]);
+
+  const addToCart = async (plant) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/addcart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantId: plant._id,
+                name: plant.common_name,
+                price: plant.price
+            })
+        });
+        console.log(`${plant.name} added to cart`);
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+    } catch (error) {
+        console.error("Error adding plant to cart:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,53 +54,7 @@ function ProductPage() {
   return (
     <div className="page-container">
       <div className="sidebar">
-        <ul>
-          <li>
-            <a href="/mainPage">
-              <img src="http://localhost:5173/src/assets/home.png" alt="mainPage" />
-              <span>Home</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/list">
-              <img src="http://localhost:5173/src/assets/shop.png" alt="list" /><span>Shop</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/cart">
-              <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
-              <span>Cart</span>
-            </a>
-          </li>
-
-          <li>
-            <Link to="/favorite">
-              <img src="http://localhost:5173/src/assets/favorite.png" alt="Favorites" />
-              <span>Favorites</span>
-            </Link>
-          </li>
-
-        </ul>
-
-        <ul className="bottom-links">
-          <li>
-            <a href="/Login">
-              <img src="http://localhost:5173/src/assets/login.jpg" alt="Login" /><span>Login</span></a>
-          </li>
-
-          <li>
-            <a href="/Signup">
-              <img src="http://localhost:5173/src/assets/register.jpg" alt="Signup" /><span>Register</span>
-            </a>
-          </li>
-          <li>
-            <a href="/Vendor">
-              <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
-            </a>
-          </li>
-        </ul>
+        <Sidebar />
       </div>
 
       <div id="product-page">
@@ -94,16 +69,15 @@ function ProductPage() {
             <h2>Price: ${product.price}</h2>
 
             <ul>
-              <li>{product.original}</li>
-              <li>Ratings: 0</li>
-              <li>{product.quantity}</li>
-              <li>{product.countInStock}</li>
+              <li>From: {product.ecozone}</li>
+              {/* <li>Ratings: 0</li> */}
+              <li>Total number in stock: {product.countInStock}</li>
             </ul>
-            <button className="add-to-cart-button">Add To Cart</button>
+            <button onClick={() => addToCart(product)} className="add-to-cart-button">Add to cart</button>
           </div>
         </div>
 
-        <div id="review-section">
+        {/* <div id="review-section">
           <h2>Write Your Review</h2>
           <form id="review-form">
             <div className="form-field">
@@ -124,7 +98,8 @@ function ProductPage() {
 
             <button type="submit" className="submit-review-button">Submit</button>
           </form>
-        </div>
+        </div> */}
+
       </div>
     </div>
   );

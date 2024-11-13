@@ -3,6 +3,7 @@ import './css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import Sidebar from './sidebar';
 
 
 const Signup = () => {
@@ -105,53 +106,7 @@ const Signup = () => {
     <div id="signup-container">
 
       <div className="sidebar">
-        <ul>
-          <li>
-            <a href="/mainPage">
-              <img src="src/assets/home.png" alt="mainPage" />
-              <span>Home</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/list">
-              <img src="src/assets/shop.png" alt="list" /><span>Shop</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/cart">
-              <img src="src/assets/cart.png" alt="Cart" />
-              <span>Cart</span>
-            </a>
-          </li>
-
-          <li>
-            <Link to="/favorite">
-              <img src="src/assets/favorite.png" alt="Favorites" />
-              <span>Favorites</span>
-            </Link>
-          </li>
-
-        </ul>
-
-        <ul className="bottom-links">
-          <li>
-            <a href="/Login">
-              <img src="src/assets/login.jpg" alt="Login" /><span>Login</span></a>
-          </li>
-
-          <li>
-            <a href="/Signup">
-              <img src="src/assets/register.jpg" alt="Signup" /><span>Register</span>
-            </a>
-          </li>
-          <li>
-            <a href="/Vendor">
-              <img src="src/assets/login.jpg" alt="Vendor" /><span>Vendor</span>
-            </a>
-          </li>
-        </ul>
+        <Sidebar />
       </div>
 
       <div id="form-container">
@@ -190,24 +145,32 @@ const Signup = () => {
             <input type="email" name="email" value={email} onChange={handleChange} />
             {errors.email && <span className="error">{errors.email}</span>}
           </p>
+
           <p className="input-field">
             <label htmlFor="password">Password:</label>
             <input type="password" name="password" value={password} onChange={handleChange} />
             {errors.password && <span className="error">{errors.password}</span>}
           </p>
+
           <p className="input-field">
             <label htmlFor="confirmPassword">Confirm Password:</label>
             <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleChange} />
             {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
           </p>
-          <p className="input-field">
-            <label htmlFor="isVendor">Are you a vendor?</label>
-            <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange} />
+
+         <p className="check-input-field">
+            <label htmlFor="isVendor" className="vendor-label">Are you a vendor?</label>
+            <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange}className="vendor-checkbox"/>
           </p>
+
           <p className="input-field">
             <button type="submit">Signup</button>
           </p>
+
+          <p className="login-prompt"> Already have an account? <a href="/login" className="login-link">Login</a>
+          </p>
         </form>
+
       </div>
       <div id="image-container">
         <img src="/src/assets/farmer.jpg" alt="Featured Product" className="image-container" />
