@@ -138,6 +138,20 @@ app.get('/api/plants', async (req, res) => {
     }
 });
 
+
+app.get('/api/vendors', async (req, res) => {
+    console.log('GET /api/vendor route called');
+    try {
+        const vendorOpt = await Vendor.find({});
+
+        res.json(vendorOpt);
+    } catch (error) {
+        console.error('Error fetching vendors:', error);
+        res.status(500).json({ error: 'Failed to fetch vendors' });
+    }
+});
+
+
 // retrieve image
 app.get("/product/:id", async (req, res) => {
     try {
