@@ -145,19 +145,22 @@ const Signup = () => {
             <input type="email" name="email" value={email} onChange={handleChange} />
             {errors.email && <span className="error">{errors.email}</span>}
           </p>
+
           <p className="input-field">
             <label htmlFor="password">Password:</label>
             <input type="password" name="password" value={password} onChange={handleChange} />
             {errors.password && <span className="error">{errors.password}</span>}
           </p>
+
           <p className="input-field">
             <label htmlFor="confirmPassword">Confirm Password:</label>
             <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleChange} />
             {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
           </p>
-          <p className="input-field">
-            <label htmlFor="isVendor">Are you a vendor?</label>
-            <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange} />
+
+         <p className="check-input-field">
+            <label htmlFor="isVendor" className="vendor-label">Are you a vendor?</label>
+            <input label="Yes" type="checkbox" name="isVendor" value={!isVendor} onChange={handleChange}className="vendor-checkbox"/>
           </p>
 
           <p className="input-field">
@@ -167,6 +170,7 @@ const Signup = () => {
           <p className="login-prompt"> Already have an account? <a href="/login" className="login-link">Login</a>
           </p>
         </form>
+
       </div>
       <div id="image-container">
         <img src="/src/assets/farmer.jpg" alt="Featured Product" className="image-container" />

@@ -23,28 +23,25 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type']
 }));
-            app.use(session({
-                secret: 'U_of_R_Secret_key',
-                resave: false,
-                saveUninitialized: false,
-                store: MongoStore.create({ 
-                    mongoUrl: process.env.MONGO_URI,
-                    ttl: 24 * 60 * 60 // Session TTL in seconds (1 day)
-                }),
-                cookie: { 
-                    maxAge: 24 * 60 * 60 * 1000, // Cookie TTL in milliseconds (1 day)
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'lax',
-                    httpOnly: true
-                }
-            }));
-            
-    mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
-    .catch(err => console.error(err));
-                
+
+app.use(session({
+    secret: 'U_of_R_Secret_key',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ 
+    mongoUrl: process.env.MONGO_URI,
+        ttl: 24 * 60 * 60 // Session TTL in seconds (1 day)
+    }),
+    cookie: { 
+        maxAge: 24 * 60 * 60 * 1000, // Cookie TTL in milliseconds (1 day)
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        httpOnly: true
+    }
+}));
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected'))
-.catch(err => console.error(err));
+mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected')).catch(err => console.error(err));
 
 // Signup route
 app.post("/signup", async (req, res) => {
@@ -91,9 +88,6 @@ app.post("/signup", async (req, res) => {
         res.status(500).send('Server error');
     }
 });
-
-
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -312,6 +306,20 @@ app.get('/api/vendor/plants', async (req, res) => {
     }
 });
 
+
+app.get('/api/vendors', async (req, res) => {
+    console.log('GET /api/vendor route called');
+    try {
+        const vendorOpt = await Vendor.find({});
+
+        res.json(vendorOpt);
+    } catch (error) {
+        console.error('Error fetching vendors:', error);
+        res.status(500).json({ error: 'Failed to fetch vendors' });
+    }
+});
+
+
 // retrieve image
 app.get("/product/:id", async (req, res) => {
     try {
@@ -341,28 +349,52 @@ app.delete('/api/plants/:id', async (req, res) => {
 });
     
 app.post('/api/addcart', async (req, res) => {
+    // check if user is login and is buyer or not
+    if (!req.session.user || req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can add to cart" });
+    }
+
     const { plantId, name, price, quantity } = req.body;
+    const buyerId = req.session.user.id;
     console.log("i am in the addcart");
-    
+
     try {
-        const item = await Cart.create({
-            plantId,
-            name,
-            price
+        // Check if item already exists in cart for this buyer
+        const existingItem = await Cart.findOne({ 
+            buyerId: buyerId,
+            plantId: plantId 
         });
-        await item.save();
-        console.log("this is item content: ",item);
-        res.status(200).json(item);
+
+        if (existingItem) {
+            // Update quantity if item exists
+            existingItem.quantity += quantity || 1;
+            await existingItem.save();
+            res.status(200).json(existingItem);
+        } else {
+            // Create new cart item
+            const item = await Cart.create({
+                buyerId,
+                plantId,
+                name,
+                price,
+                quantity: quantity || 1
+            });
+            res.status(200).json(item);
+        }
     } catch (error) {
         res.status(500).json({ message: "Error adding product to cart", error });
     }
 });
 
 app.get('/api/cart', async (req, res) => {
+    // Check if item already exists in cart for this buyer
+    if (!req.session.user || req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+
     try {
-        console.log("inside the cart");
-        const cartItems = await Cart.find({});
-    
+        const buyerId = req.session.user.id;
+        const cartItems = await Cart.find({ buyerId: buyerId });
         res.status(200).json(cartItems);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving cart", error });
@@ -393,14 +425,26 @@ app.get('/image/:id', async (req, res) => {
 
 
 app.delete('/api/cart/item/:id', async (req, res) => {
+    // Check if item already exists in cart for this buyer
+    if (!req.session.user || req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+
     try {
-        const deletedItem = await Cart.findByIdAndDelete(req.params.id);
-        if (!deletedItem) return res.status(404).json({ message: 'Plant not found' });
-            res.status(200).json({ message: 'Plant deleted successfully' });
-        } catch (error) {
-            console.error('Error deleting plant:', error);
-        res.status(500).json({ error: 'Failed to delete plant' });
+        const buyerId = req.session.user.id;
+        const deletedItem = await Cart.findOneAndDelete({
+            _id: req.params.id,
+            buyerId: buyerId
+        });
+
+        if (!deletedItem) {
+            return res.status(404).json({ message: 'Item not found or unauthorized' });
         }
+
+        res.status(200).json({ message: 'Item deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete item' });
+    }
 });
 
   app.use((err, req, res, next) => {
@@ -429,6 +473,8 @@ app.get('/api/user-role', (req, res) => {
 
 app.post("/login", async (req, res) => {
     console.log('Login attempt with:', req.body);
+
+    let errors = {};
     
     try {
         const { email, password } = req.body;
@@ -443,12 +489,26 @@ app.post("/login", async (req, res) => {
         let user = null;
         let isVendor = false;
 
-        if (buyer && password === buyer.password) {
-            user = buyer;
-            isVendor = false;
-        } else if (vendor && password === vendor.password) {
-            user = vendor;
-            isVendor = true;
+        if (buyer) {
+            if(password === buyer.password){
+                user = buyer;
+                isVendor = false;
+            } else{
+                errors.password = 'Invalid password';
+            }
+        } else if (vendor) {
+            if(password === vendor.password){
+                user = vendor;
+                isVendor = true;
+            } else{
+                errors.password = 'Invalid password';
+            }
+        }else{
+            errors.email = 'Invalid email';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
         }
 
         if (!user) {

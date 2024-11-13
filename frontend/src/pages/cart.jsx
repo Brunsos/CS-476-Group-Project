@@ -1,7 +1,6 @@
 import './css/cart.css';
 import './css/sidebar.css';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 
@@ -11,31 +10,80 @@ function ShoppingCart() {
     const [imageUrls, setImageUrls] = useState({});
 
     useEffect(() => {
-        const fetchCart = async () => {
+        const checkSession = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/cart');
-                if (!response.ok) throw new Error('Failed to load items');
-                const data = await response.json();
-
-                console.log("retrieval plant: ", data[0].plantId)
-
-                setItems(data);
-
-                data.forEach(item => {
-                    loadImage(item.plantId);
+                const response = await fetch('http://localhost:5000/api/user-role', {
+                    credentials: 'include'
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Not authenticated');
+                }
+
+                const data = await response.json();
+                if (data.isVendor) {
+                    // If user is a vendor, redirect to vendor page
+                    navigate('/vendor');
+                    return;
+                }
+
+                // If we get here, user is a buyer, so fetch their cart
+                fetchCart();
             } catch (error) {
-                console.error("Error fetching cart:", error);
+                console.error("Session check failed:", error);
+                navigate('/login');  // Redirect to login if not authenticated
             }
         };
-        fetchCart();
-    }, []);
+
+        checkSession();
+    }, [navigate]);
+
+    const fetchCart = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/cart', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to load items');
+            }
+            
+            const data = await response.json();
+            setItems(data);
+            
+            // Load images for each item
+            data.forEach(item => {
+                loadImage(item.plantId);
+            });
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/cart/item/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete item');
+            }
+
+            setItems((prevCart) => prevCart.filter(item => item._id !== id));
+        } catch (error) {
+            console.error("Error removing product from cart:", error);
+        }
+    };
 
     const loadImage = async (plantId) => {
         try {
             console.log("Loading image for plantId:", plantId);
 
-            const response = await fetch(`http://localhost:5000/image/${plantId}`);
+            const response = await fetch(`http://localhost:5000/image/${plantId}`, {
+                credentials: 'include'
+            });
 
             if (!response.ok) throw new Error('Failed to load image');
 
@@ -53,24 +101,18 @@ function ShoppingCart() {
         }
       };
 
-    
-
-    const handleDelete = async (id) => {
-        try {
-            await fetch(`http://localhost:5000/api/cart/item/${id}`, {
-                method: 'DELETE'
-            });
-            setItems((prevCart) => prevCart.filter(item => item._id !== id));
-        } catch (error) {
-            console.error("Error removing product from cart:", error);
-        }
-    };
-
     const handleCheckout = () => {
         navigate('/shipping');
     };
 
-    const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+    const totalPrice = items.reduce((sum, item) => {
+        const itemTotal = item.price * item.quantity;
+        return sum + itemTotal;
+    }, 0);
+
+    const totalItem = items.reduce((counter, item) => {
+        return counter + item.quantity;
+    }, 0);
 
     return (
         <div className="cart-container">
@@ -91,20 +133,15 @@ function ShoppingCart() {
                                 <h2>{item.name}</h2>
                                 <span className="item-price">${item.price}</span>
                             </div>
-                            {/* <select className="item-quantity">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                </select> */}
                                 <button className="remove-item" onClick={() => handleDelete(item._id)}>🗑️</button>
                         </div>
+                        
                         ))) : (<p>there is no item yet</p>)
                     }
-                        
                 </div>
 
                 <div className="cart-summary">
-                    <p>Items ({items.length})</p>
+                    <p>Items {totalItem}</p>
                     <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
                 </div>
 
