@@ -70,35 +70,12 @@ function ProductPage() {
 
             <ul>
               <li>From: {product.ecozone}</li>
-              {/* <li>Ratings: 0</li> */}
               <li>Total number in stock: {product.countInStock}</li>
             </ul>
             <button onClick={() => addToCart(product)} className="add-to-cart-button">Add to cart</button>
           </div>
         </div>
 
-        {/* <div id="review-section">
-          <h2>Write Your Review</h2>
-          <form id="review-form">
-            <div className="form-field">
-              <label htmlFor="rating">Rating</label>
-              <select id="rating">
-                <option value="1">1 Star</option>
-                <option value="2">2 Stars</option>
-                <option value="3">3 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="5">5 Stars</option>
-              </select>
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="comment">Comment</label>
-              <textarea id="comment"></textarea>
-            </div>
-
-            <button type="submit" className="submit-review-button">Submit</button>
-          </form>
-        </div> */}
 
       </div>
     </div>

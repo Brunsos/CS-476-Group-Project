@@ -92,85 +92,6 @@ app.post("/signup", async (req, res) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// app.post("/vendorPost", upload.single('image'), async (req, res) => {
-//     console.log(req.body);
-    
-//     try{
-//         const { common_name, price, ecozone, description, countInStock, ratingSum, ratingCount } = req.body;
-        
-//         const plant = new Plant({
-//             image: req.file.buffer,
-//             common_name,
-//             price,
-//             ecozone,
-//             description,
-//             countInStock,
-//             ratingSum,
-//             ratingCount,
-//             vendorId: req.session.user.id 
-//         });
-
-//         // await plant.save();;
-//         const savedPlant = await plant.save();
-//         res.status(200).json({ msg: 'Plant registered successfully' });
-
-//        await Vendor.findByIdAndUpdate(
-//         req.session.user.id,
-//         { $push: { plantArray: savedPlant._id } }
-//     );
-
-//     }catch(err){
-//         console.error(err);
-//         res.status(500).send({ msg: 'Server error' });
-//     }
-
-// });
-
-// app.post("/vendorPost", upload.single('image'), async (req, res) => {
-//     console.log('Session data:', req.session); // Debug log
-    
-//     try {
-//         // Check if user is logged in and is a vendor
-//         if (!req.session?.user?.id || !req.session?.user?.isVendor) {
-//             return res.status(401).json({ msg: 'Unauthorized: Must be logged in as vendor' });
-//         }
-
-//         const { common_name, price, ecozone, description, countInStock } = req.body;
-        
-//         // Create new plant with vendorId
-//         const plant = new Plant({
-//             image: req.file.buffer,
-//             common_name,
-//             price,
-//             ecozone,
-//             description,
-//             countInStock,
-//             ratingSum: 0,
-//             ratingCount: 0,
-//             vendorId: req.session.user.id // Use the correct field name
-//         });
-
-//         // Save the plant
-//         const savedPlant = await plant.save();
-
-//         // Update vendor's plantArray
-//         await Vendor.findByIdAndUpdate(
-//             req.session.user.id,
-//             { $push: { plantArray: savedPlant._id } },
-//             { new: true }
-//         );
-
-//         res.status(200).json({ 
-//             msg: 'Plant registered successfully',
-//             plantId: savedPlant._id
-//         });
-
-//     } catch (err) {
-//         console.error('Error in vendorPost:', err);
-//         res.status(500).json({ msg: 'Server error', error: err.message });
-//     }
-// });
-
 app.post("/vendorPost", upload.single('image'), async (req, res) => {
     console.log('Session data:', req.session);
     
@@ -226,51 +147,23 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
     }
 });
 
-// app.get('/api/plants', async (req, res) => {
-//     console.log('GET /api/plants route called');
-//     console.log(req.isVendor);
-//     try {
-//         const plants = await Plant.find({});
+app.get('/api/plants', async (req, res) => {
+    console.log('GET /api/plants route called');
+    console.log(req.isVendor);
+    try {
+        const plants = await Plant.find({});
 
-//         const plantsImages = plants.map(plant => ({
-//             ...plant.toObject(),
-//             image: plant.image.toString('base64')
-//         }));
+        const plantsImages = plants.map(plant => ({
+            ...plant.toObject(),
+            image: plant.image.toString('base64')
+        }));
 
-//         res.json(plantsImages);
-//     } catch (error) {
-//         console.error('Error fetching plants:', error);
-//         res.status(500).json({ error: 'Failed to fetch plants' });
-//     }
-// });
-
-// app.get('/api/vendor/plants', async (req, res) => {
-//     console.log('Session data in vendor/plants:', req.session); // Debug log
-    
-//     try {
-//         if (!req.session?.user?.id || !req.session?.user?.isVendor) {
-//             return res.status(401).json({ msg: 'Unauthorized' });
-//         }
-
-//         // Find plants by vendorId
-//         const plants = await Plant.find({ vendorId: req.session.user.id });
-
-//         if (!plants) {
-//             return res.json([]);
-//         }
-
-//         // Convert plant images to base64
-//         const plantsWithImages = plants.map(plant => ({
-//             ...plant.toObject(),
-//             image: plant.image.toString('base64')
-//         }));
-
-//         res.json(plantsWithImages);
-//     } catch (error) {
-//         console.error('Error fetching vendor plants:', error);
-//         res.status(500).json({ error: 'Failed to fetch plants' });
-//     }
-// });
+        res.json(plantsImages);
+    } catch (error) {
+        console.error('Error fetching plants:', error);
+        res.status(500).json({ error: 'Failed to fetch plants' });
+    }
+});
 
 app.get('/api/vendor/plants', async (req, res) => {
     try {

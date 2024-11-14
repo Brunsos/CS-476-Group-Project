@@ -41,14 +41,13 @@ try {
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // Important for cookies
+        credentials: 'include', 
         body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-        // Optional: Store user info in localStorage or state management
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/mainPage');
     } else {

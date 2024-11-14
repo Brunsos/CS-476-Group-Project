@@ -28,41 +28,6 @@ const VendorPost = () => {
     setimage(e.target.files[0]);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const formData = new FormData();
-  //   formData.append('image', image);
-  //   formData.append('common_name', common_name);
-  //   formData.append('price', price);
-  //   formData.append('ecozone', ecozone);
-  //   formData.append('description', description);
-  //   formData.append('countInStock', countInStock);
-    
-  //   try {
-  //     const response = await fetch('http://localhost:5000/vendorPost', {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-  
-  //     const result = await response.json();
-  //     console.log(result);
-  
-  //     if (response.status === 200) {
-  //       navigate('/vendor');
-  //     }
-  //     else if (response.status === 400) {
-  //       setErrors(result.errors);
-  //     }
-  //     else {
-  //       alert(result.msg || 'Error during registration');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during uploading:', error);
-  //     alert('An error occurred while uploading. Please try again.');
-  //   }
-  // }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,7 +42,7 @@ const VendorPost = () => {
     try {
         const response = await fetch('http://localhost:5000/vendorPost', {
             method: 'POST',
-            credentials: 'include', // Add this line
+            credentials: 'include',
             body: formData,
         });
     
