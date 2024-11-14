@@ -21,14 +21,14 @@ function HomePage() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                // First check localStorage
+                // Check localStorage
                 const storedUser = localStorage.getItem('user');
                 if (storedUser) {
                     const userData = JSON.parse(storedUser);
                     setIsVendor(userData.isVendor);
                 }
 
-                // Then verify with server
+                // Verify with server
                 const response = await fetch('http://localhost:5000/api/user-role', {
                     credentials: 'include',
                     headers: {

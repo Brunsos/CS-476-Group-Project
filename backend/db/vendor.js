@@ -8,7 +8,9 @@ const vendorSchema = new mongoose.Schema({
   city: { type: String, required: false },
   address: { type: String, required: false },
   isVendor: { type: Boolean, required: false },
-  // inventory: { type: Array, required: false }
+  //plantArray: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' }]
+  plantArray: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' }], 
+  __v: { type: Number, required: false }
 });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);

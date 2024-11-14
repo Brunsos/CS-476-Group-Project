@@ -93,11 +93,23 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 app.post("/vendorPost", upload.single('image'), async (req, res) => {
-    console.log(req.body);
+    console.log('Session data:', req.session);
     
-    try{
-        const { common_name, price, ecozone, description, countInStock, ratingSum, ratingCount } = req.body;
+    try {
+        // Check if user is logged in and is a vendor
+        if (!req.session?.user?.id || !req.session?.user?.isVendor) {
+            return res.status(401).json({ msg: 'Unauthorized: Must be logged in as vendor' });
+        }
+
+        // Find the vendor first
+        const vendor = await Vendor.findById(req.session.user.id);
+        if (!vendor) {
+            return res.status(404).json({ msg: 'Vendor not found' });
+        }
+
+        const { common_name, price, ecozone, description, countInStock } = req.body;
         
+        // Create new plant
         const plant = new Plant({
             image: req.file.buffer,
             common_name,
@@ -105,19 +117,34 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
             ecozone,
             description,
             countInStock,
-            ratingSum,
-            ratingCount,
+            ratingSum: 0,
+            ratingCount: 0,
+            vendorId: vendor._id
         });
 
-        await plant.save();
-        res.status(200).json({ msg: 'Plant registered successfully' });
-       //console.log(res.status(202));
+        // Save the plant
+        const savedPlant = await plant.save();
 
-    }catch(err){
-        console.error(err);
-        res.status(500).send({ msg: 'Server error' });
+        // Initialize plantArray if it doesn't exist
+        if (!vendor.plantArray) {
+            vendor.plantArray = [];
+        }
+
+        // Add plant to vendor's plantArray
+        vendor.plantArray.push(savedPlant._id);
+        await vendor.save();
+
+        console.log('Updated vendor:', vendor); // Debug log
+
+        res.status(200).json({ 
+            msg: 'Plant registered successfully',
+            plantId: savedPlant._id
+        });
+
+    } catch (err) {
+        console.error('Error in vendorPost:', err);
+        res.status(500).json({ msg: 'Server error', error: err.message });
     }
-
 });
 
 app.get('/api/plants', async (req, res) => {
@@ -137,6 +164,54 @@ app.get('/api/plants', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch plants' });
     }
 });
+
+app.get('/api/vendor/plants', async (req, res) => {
+    try {
+        if (!req.session?.user?.id || !req.session?.user?.isVendor) {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        // Find the vendor and populate their plants
+        const vendor = await Vendor.findById(req.session.user.id);
+        if (!vendor) {
+            return res.status(404).json({ msg: 'Vendor not found' });
+        }
+
+        // Initialize plantArray if it doesn't exist
+        if (!vendor.plantArray) {
+            vendor.plantArray = [];
+            await vendor.save();
+        }
+
+        // Find all plants belonging to this vendor
+        const plants = await Plant.find({ vendorId: vendor._id });
+
+        // Convert plant images to base64
+        const plantsWithImages = plants.map(plant => ({
+            ...plant.toObject(),
+            image: plant.image.toString('base64')
+        }));
+
+        res.json(plantsWithImages);
+    } catch (error) {
+        console.error('Error fetching vendor plants:', error);
+        res.status(500).json({ error: 'Failed to fetch plants' });
+    }
+});
+
+
+app.get('/api/vendors', async (req, res) => {
+    console.log('GET /api/vendor route called');
+    try {
+        const vendorOpt = await Vendor.find({});
+
+        res.json(vendorOpt);
+    } catch (error) {
+        console.error('Error fetching vendors:', error);
+        res.status(500).json({ error: 'Failed to fetch vendors' });
+    }
+});
+
 
 // retrieve image
 app.get("/product/:id", async (req, res) => {
@@ -360,6 +435,33 @@ app.post("/login", async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ msg: 'Server error during login' });
+    }
+});
+
+app.get('/api/vendor/plants', async (req, res) => {
+    try {
+        if (!req.session.user || !req.session.user.isVendor) {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        // Find vendor and populate their plants
+        const vendor = await Vendor.findById(req.session.user.id)
+            .populate('plantArray');
+
+        if (!vendor) {
+            return res.status(404).json({ msg: 'Vendor not found' });
+        }
+
+        // Convert plant images to base64
+        const plantsWithImages = vendor.plantArray.map(plant => ({
+            ...plant.toObject(),
+            image: plant.image.toString('base64')
+        }));
+
+        res.json(plantsWithImages);
+    } catch (error) {
+        console.error('Error fetching vendor plants:', error);
+        res.status(500).json({ error: 'Failed to fetch plants' });
     }
 });
 

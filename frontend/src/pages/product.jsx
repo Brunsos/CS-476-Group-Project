@@ -124,6 +124,7 @@ function ProductPage() {
           </div>
         </div>
 
+
       </div>
     </div>
   );

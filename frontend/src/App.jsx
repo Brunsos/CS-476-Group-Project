@@ -11,6 +11,7 @@ import Shipping from './pages/shipping.jsx';
 import PlaceOrder from './pages/placeOrder.jsx';
 import Favorite from './pages/favorite.jsx';
 import ProfilePage from './pages/profilePage.jsx';
+import Ordercheckout from './pages/Ordercheckout.jsx';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/Ordercheckout" element={<Ordercheckout />} />
       </Routes>
     </Router>
   );
