@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import Buyer from "../db/buyer.js";  // Import the Buyer model
 import Vendor from "../db/vendor.js"; // Import the Vendor model
-import Plant from "../db/plant.js";
+import Plant from "../db/plant.js"; // Import the Plant model
+import Payment from "../db/paymentInfo.js"; // Import the Credit/Debit card model
 import Cart from "../db/cart.js"
 import cors from "cors";
 import multer from 'multer';
@@ -302,6 +303,52 @@ app.get('/api/user-role', (req, res) => {
     }
 });
 
+// Gets the specific users shipping info
+app.get('/api/specific-user', async (req, res) => {
+    try {
+        console.log('Session data on /api/specific-user:', req.session);
+        
+        // Confirms that the user is logged in
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ msg: 'No session found' });
+        }
+        
+        // Find the specific user using their unique ID
+        const userInfo = await Buyer.findOne(req.session.user._id);
+        
+        // Send the sought after shipping results back as a JSON object
+        res.status(200).json({ 
+            id: userInfo.id,
+            province: userInfo.province,
+            city: userInfo.city,
+            address: userInfo.address 
+        });
+    } catch (error) {
+        console.error('Error in /api/specific-user', error);
+        res.status(500).json({ msg: 'Server error checking for specific user' });
+    }
+});
+
+app.post('/api/save-payment', async (req, res) => {
+    let errors = {};
+
+    const {cardNumber, expDate, cvc, nameOnCard, nickname} = req.body;
+
+    try {
+        if(req.session.user.savedCards.contains(cardNumber)){
+            res.status(400).json({msg: "The card is already registered"});
+        }
+        else{
+            let addCard = new Payment({cardNumber, expDate, cvc, nameOnCard, nickname});
+            await addCard.save();
+            res.status(201).json({msg: "Card added successfully"});
+            req.session.user.savedCards.push(addCard)
+        }
+    } catch (error){
+        console.log(error);
+        res.status(500).json({msg: 'Server error adding card'})
+    }
+})
 
 app.post("/login", async (req, res) => {
     console.log('Login attempt with:', req.body);
