@@ -1,10 +1,11 @@
 import './css/sidebar.css';
 import { Link } from 'react-router-dom';
+//import React from 'react';
 import React, { useState, useEffect } from 'react';
 
 const Sidebar = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // track login for dynamic rendering
-    const [isVendor, setIsVendor] = useState(false); // check if user is vendor 
+
+    const [isVendor, setIsVendor] = useState(false)
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -14,7 +15,6 @@ const Sidebar = () => {
                 if (storedUser) {
                     const userData = JSON.parse(storedUser);
                     setIsVendor(userData.isVendor);
-                    setIsLoggedIn(true);
                 }
 
                 // Then verify with server
@@ -32,14 +32,13 @@ const Sidebar = () => {
                     // Handle unauthorized - clear local storage
                     localStorage.removeItem('user');
                     setIsVendor(false);
-                    setIsLoggedIn(false);
                 }
             } catch (error) {
                 console.error('Auth check error:', error);
                 setIsVendor(false);
-                setIsLoggedIn(false);
-            } 
+            }
         };
+
 
         checkAuth();
     }, []);
@@ -59,53 +58,38 @@ const Sidebar = () => {
                         <span>Shop</span>
                     </Link>
                 </li>
-
-                {!isVendor && isLoggedIn && (
-                    <li>
-                        <Link to="/cart">
-                            <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
-                            <span>Cart</span>
-                        </Link>
-                    </li>
-                )}
+                <li>
+                    <Link to="/cart">
+                        <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
+                        <span>Cart</span>
+                    </Link>
+                </li>
             </ul>
 
             <ul className="bottom-links">
-                {isLoggedIn ? (
+                <li>
+                    <Link to="/profile">
+                        <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
+                        <span>Profile</span>
+                    </Link>
+                </li>
+                {isVendor && (
                     <>
                         <li>
-                            <Link to="/profile">
-                                <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
-                                <span>Profile</span>
-                            </Link>
-                        </li>
-                        {isVendor && ( 
-                            // only show if user is vendor
-                            <li>
-                                <Link to="/vendor">
-                                    <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
-                                    <span>Vendor</span>
-                                </Link>
-                            </li>
-                        )}
-                    </>
-                ) : (
-                    // only show when not logged in
-                    <>
-                        <li>
-                            <Link to="/login">
-                                <img src="http://localhost:5173/src/assets/login.jpg" alt="Login" />
-                                <span>Login</span>
-                            </Link>
+                            <a href="/Vendor">
+                                <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
+                                <span>Vendor</span>
+                            </a>
                         </li>
                         <li>
-                            <Link to="/signup">
-                                <img src="http://localhost:5173/src/assets/register.jpg" alt="Register" />
-                                <span>Register</span>
-                            </Link>
+                            <a href="/Ordercheckout">
+                                <img src="http://localhost:5173/src/assets/checkout.png" alt="Ordercheckout" />
+                                <span>Order checkout</span>
+                            </a>
                         </li>
                     </>
                 )}
+
             </ul>
         </div>
     );
