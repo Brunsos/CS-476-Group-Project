@@ -74,25 +74,6 @@ function ProductPage() {
     };
       
 
-  // useEffect(() => {
-  //   const fetchProduct = async () => {
-  //     try {
-  //       const response = await fetch(`http://localhost:5000/product/${id}`,{
-  //         credentials: 'include'
-  //       });
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setProduct(data);
-  //       } else {
-  //         console.error("Product not found");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching product:", error);
-  //     }
-  //   };
-  //   fetchProduct();
-  // }, [id]);
-
   if (!product) {
     return <p>Loading...</p>;
   }

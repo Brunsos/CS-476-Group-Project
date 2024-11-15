@@ -23,7 +23,7 @@ function ShoppingCart() {
                 const data = await response.json();
                 if (data.isVendor) {
                     // If user is a vendor, redirect to vendor page
-                    navigate('/vendor');
+                    navigate('/mainPage');
                     return;
                 }
 
@@ -99,7 +99,7 @@ function ShoppingCart() {
         } catch (error) {
           console.error("Error fetching image:", error);
         }
-      };
+    };
 
     const handleCheckout = () => {
         navigate('/shipping');
@@ -127,7 +127,7 @@ function ShoppingCart() {
 
                     {items.length > 0 ? (items.map(item => (
                         <div key={item._id} className="cart-item">
-                            <img src={imageUrls[item.plantId] || 'placeholder.jpg'} alt={item.name}/>
+                            <img src={imageUrls[item.plantId]} alt={item.name}/>
 
                             <div className="item-details">
                                 <h2>{item.name}</h2>
