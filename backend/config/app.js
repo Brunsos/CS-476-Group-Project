@@ -253,6 +253,13 @@ app.post('/api/addcart', async (req, res) => {
     console.log("i am in the addcart");
 
     try {
+        console.log("trying to find the product");
+
+        const plant = await Plant.findById(plantId);
+        if (!plant) {
+            return res.status(404).json({ message: "Plant not found" });
+        }
+
         // Check if item already exists in cart for this buyer
         const existingItem = await Cart.findOne({ 
             buyerId: buyerId,
@@ -264,9 +271,12 @@ app.post('/api/addcart', async (req, res) => {
             existingItem.quantity += quantity || 1;
             await existingItem.save();
             res.status(200).json(existingItem);
+
+            console.log("if the item exist");
         } else {
             // Create new cart item
             const item = await Cart.create({
+                vendorId: plant.vendorId,
                 buyerId,
                 plantId,
                 name,
@@ -275,13 +285,15 @@ app.post('/api/addcart', async (req, res) => {
             });
             res.status(200).json(item);
         }
+    
+        console.log("everything went good")
     } catch (error) {
         res.status(500).json({ message: "Error adding product to cart", error });
     }
 });
 
 app.get('/api/cart', async (req, res) => {
-    // Check if item already exists in cart for this buyer
+    // Check if the user has login in or not
     if (!req.session.user || req.session.user.isVendor) {
         return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
     }
@@ -294,6 +306,37 @@ app.get('/api/cart', async (req, res) => {
         res.status(500).json({ message: "Error retrieving cart", error });
     }
 });
+
+app.get('/api/order', async (req, res) => {
+    // Check if the user has login in or not
+    if (!req.session.user || !req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+    try {
+        const vendorId = req.session.user.id;
+        const orderItems = await Cart.find({ vendorId: vendorId });
+        res.status(200).json(orderItems);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving order", error });
+    }
+})
+
+app.get('/api/buyerInfo', async (req, res) => {
+    // Check if the user has login in or not
+    if (!req.session.user || !req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+    try {
+        const vendorId = req.session.user.id;
+
+        // using populate function to replace the buyerId by actual document with the field we wanted
+        const orderItems = await Cart.find({ vendorId: vendorId }).populate('buyerId', 'userName email address');
+
+        res.status(200).json(orderItems);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving order", error });
+    }
+})
 
     // retrieve single image
 app.get('/image/:id', async (req, res) => {
@@ -309,6 +352,12 @@ app.get('/image/:id', async (req, res) => {
             res.set('Content-Type', 'image/jpeg');
             res.send(imageBuffer);
         } else {
+            console.log("trying to delete item");
+
+            await Cart.findOneAndDelete({
+                plantId: req.params.id
+            });
+
             console.log("No plant or image found");
             res.status(404).send("Image not found");
         }

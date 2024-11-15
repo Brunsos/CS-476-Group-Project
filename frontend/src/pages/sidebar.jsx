@@ -52,32 +52,29 @@ const Sidebar = () => {
                         <span>Home</span>
                     </Link>
                 </li>
-                <li>
-                    <Link to="/list">
-                        <img src="http://localhost:5173/src/assets/shop.png" alt="list" />
-                        <span>Shop</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/cart">
-                        <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
-                        <span>Cart</span>
-                    </Link>
-                </li>
-            </ul>
 
-            <ul className="bottom-links">
-                <li>
-                    <Link to="/profile">
-                        <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
-                        <span>Profile</span>
-                    </Link>
-                </li>
+                {!isVendor && (
+                    <>
+                        <li>
+                            <Link to="/list">
+                                <img src="http://localhost:5173/src/assets/shop.png" alt="list" />
+                                <span>Shop</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/cart">
+                                <img src="http://localhost:5173/src/assets/cart.png" alt="Cart" />
+                                <span>Cart</span>
+                            </Link>
+                        </li>
+                    </>
+                )}
+
                 {isVendor && (
                     <>
                         <li>
                             <a href="/Vendor">
-                                <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
+                                <img src="http://localhost:5173/src/assets/vendor.png" alt="Vendor" />
                                 <span>Vendor</span>
                             </a>
                         </li>
@@ -89,6 +86,15 @@ const Sidebar = () => {
                         </li>
                     </>
                 )}
+            </ul>
+
+            <ul className="bottom-links">
+                <li>
+                    <Link to="/profile">
+                        <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
+                        <span>Profile</span>
+                    </Link>
+                </li>
 
             </ul>
         </div>
