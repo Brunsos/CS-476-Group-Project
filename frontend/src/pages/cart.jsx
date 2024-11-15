@@ -133,6 +133,7 @@ function ShoppingCart() {
                                 <h2>{item.name}</h2>
                                 <span className="item-price">${item.price}</span>
                             </div>
+                                <span className="item-quantity">Quantity: {item.quantity}</span>
                                 <button className="remove-item" onClick={() => handleDelete(item._id)}>🗑️</button>
                         </div>
                         
@@ -141,8 +142,8 @@ function ShoppingCart() {
                 </div>
 
                 <div className="cart-summary">
-                    <p>Items {totalItem}</p>
-                    <p className="total-price">Total: ${totalPrice.toFixed(2)}</p>
+                    <p>Items amount: {totalItem}</p>
+                    <p className="total-price">Total price: ${totalPrice.toFixed(2)}</p>
                 </div>
 
                 <button className="checkout-button" onClick={handleCheckout} disabled={items.length === 0}>

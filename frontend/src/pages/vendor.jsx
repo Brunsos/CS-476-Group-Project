@@ -62,43 +62,36 @@ return (
       </div>
 
       <div className="content">
-          <form id="vendor-form" onSubmit={handleSubmit}>
-              <button type="submit">Add new product</button>
-          </form>
+      <div className="special-products-header">
+        <h2 className="special-products-title">My Products</h2>
+        <div className="header-buttons">
+          <button type="submit" className="add-product-button" onClick={handleSubmit}>
+            Add new product
+          </button>
+          <button className="shop-button" onClick={goToListPage}>Shop</button>
+        </div>
+      </div>
 
-          <div className="special-products-header">
-              <h2 className="special-products">My Products</h2>
-              <button className="shop-button" onClick={goToListPage}>Shop</button>
-          </div>
-
-          <div className="special-products">
               <div className="special-product-list">
                   {plants.map(plant => (
                       <div key={plant._id} className="special-product-card">
-                          <img 
-                              src={`data:image/jpeg;base64,${plant.image}`} 
-                              alt={plant.common_name} 
-                              className="special-product-image" 
-                          />
-                          <Link 
-                              to={`/product/${plant._id}`} 
-                              className='special-product-name'
-                          >
+                          <img src={`data:image/jpeg;base64,${plant.image}`}alt={plant.common_name} className="special-product-image" />
+                          <Link to={`/product/${plant._id}`} className='special-product-name'>
                               {plant.common_name}
                           </Link>
+                          
                           <p className="product-price">Price: ${plant.price}</p>
-                          <button 
-                              onClick={() => handleDelete(plant._id)} 
-                              className="delete-button"
-                          >
+                          <button  onClick={() => handleDelete(plant._id)} className="delete-button">
                               Delete Product
                           </button>
                       </div>
                   ))}
+
+
               </div>
           </div>
       </div>
-  </div>
+
 );
 }
 
