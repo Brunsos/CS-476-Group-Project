@@ -90,6 +90,7 @@ function ProductPage() {
           <div id="product-image">
             <img src={`data:image/jpeg;base64,${product.image}`} alt={product.common_name} />
           </div>
+          
           <div id="product-details">
             <h1>{product.common_name}</h1>
             <p>{product.description}</p>
