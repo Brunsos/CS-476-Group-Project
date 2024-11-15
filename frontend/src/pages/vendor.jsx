@@ -64,11 +64,9 @@ return (
       <div className="content">
       <div className="special-products-header">
         <h2 className="special-products-title">My Products</h2>
-        <div className="header-buttons">
-          <button type="submit" className="add-product-button" onClick={handleSubmit}>
-            Add new product
-          </button>
-          <button className="shop-button" onClick={goToListPage}>Shop</button>
+        <div className="vendor-header-buttons">
+          <button type="submit" className="vendor-add-button" onClick={handleSubmit}>Add new product</button>
+          <button className="vendor-shop-button" onClick={goToListPage}>Shop</button>
         </div>
       </div>
 
