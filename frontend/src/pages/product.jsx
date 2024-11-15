@@ -14,6 +14,7 @@ function ProductPage() {
 
   const addToCart = async (plant) => {
     try {
+      // send a request to add product to cart and get the response from backend
       const response = await fetch('http://localhost:5000/api/addcart', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -34,8 +35,10 @@ function ProductPage() {
   };
 
   useEffect(() => {
+    // Function to check the user's session
     const checkSession = async () => {
         try {
+          // send a request to validate the session
             const response = await fetch('http://localhost:5000/api/user-role', {
                 credentials: 'include'
             });
@@ -44,7 +47,9 @@ function ProductPage() {
                 throw new Error('Not authenticated');
             }
 
+            // Parse the response JSON to get user data
             const data = await response.json();
+            // Update the state with user data
             setUser(data);
 
             fetchProduct();
@@ -59,10 +64,12 @@ function ProductPage() {
 
   const fetchProduct = async () => {
         try {
+          // get the response from backend
           const response = await fetch(`http://localhost:5000/product/${id}`,{
             credentials: 'include'
           });
           if (response.ok) {
+            // Parse the response JSON to data
             const data = await response.json();
             setProduct(data);
           } else {
