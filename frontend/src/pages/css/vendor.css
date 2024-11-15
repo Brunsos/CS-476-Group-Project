@@ -46,8 +46,11 @@
     margin: 0;
     padding: 10px;
   }
-
-  .add-product-button {
+  
+  .vendor-header-buttons{
+    margin:10px;
+  }
+  .vendor-add-button {
     background-color: #28a745;
     color: white;
     padding: 8px 16px;
@@ -55,10 +58,10 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    margin: 10px;
+  
   }
 
-  .shop-button {
+  .vendor-shop-button {
     background-color: #ff6b6b;
     color: white;
     padding: 8px 16px;
@@ -66,7 +69,8 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    margin: 10px;
+    margin-left:10px;
+  
   }
 
   .product-price {
