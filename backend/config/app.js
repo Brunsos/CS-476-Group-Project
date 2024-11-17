@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import Buyer from "../db/buyer.js";  // Import the Buyer model
 import Vendor from "../db/vendor.js"; // Import the Vendor model
-import Plant from "../db/plant.js";
+import Plant from "../db/plant.js"; // Import the Plant model
 import Cart from "../db/cart.js"
 import cors from "cors";
 import multer from 'multer';
