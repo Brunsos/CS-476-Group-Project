@@ -12,6 +12,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
 
+
 // Loads environment variables into process.env which is loading the mongodb URI string
 dotenv.config();
 //express() is responsible for creating the framework which handles the HTTP requests 
@@ -410,8 +411,6 @@ app.get('/image/:id', async (req, res) => {
     }
 });
 
-
-//
 //*************************************************** */
 // Deletes an item from the cart of the logged in     //
 // buyer                                              //

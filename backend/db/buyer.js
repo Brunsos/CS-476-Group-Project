@@ -7,7 +7,8 @@ const buyerSchema = new mongoose.Schema({
   province: { type: String, required: true },
   city: { type: String, required: true },
   address: { type: String, required: true },
-  isVendor: { type: Boolean, required: false}
+  isVendor: { type: Boolean, required: false},
+  savedCards: {type: Array}
 });
 
 const Buyer = mongoose.model("Buyer", buyerSchema);

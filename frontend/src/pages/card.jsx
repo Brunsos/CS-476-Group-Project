@@ -3,6 +3,80 @@ import './css/card.css';
 
 const Card = ({ isOpen, onClose }) => {
     const [useShippingAddress, setUseShippingAddress] = useState(true);
+    const [cardNumber, setCardNuber] = useState('');
+    const [expDate, setExpDate] = useState(Date);
+    const [cvc, setCVC] = useState('');
+    const [nameOnCard, setNameOnCard] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [errors, setErrors] = useState({});
+
+    const handleChange = (e) =>{
+        const {name, value} = e.target;
+        if (name === "cardNum") setCardNuber(value);
+        if (name === "expDate") setExpDate(value);
+        if (name === "cvc") setCVC(value);
+        if (name === "cardHolder") setNameOnCard(value);
+        if (name === "nickname") setNickname(value);
+    };
+
+    const saveCard = async(e) => {
+
+        setErrors({});
+
+        const today = new Date();
+        const newErrors = {};
+        // Checks if the user has entered in a card that has correct amount of numbers, the industry standard is at least 15 (American Express)
+        console.log(cardNumber);
+        console.log(expDate);
+        console.log(cvc);
+        console.log(nameOnCard);
+        console.log(nickname);
+        if(cardNumber.length < 15){
+            console.log(cardNumber.length);
+            newErrors.cardNumber = 'Please enter a valid card number';
+        }
+        if (expDate < today){
+            newErrors.expDate = 'Please enter a card with a valid expiration date';
+        }
+        if (cvc.length < 3 && cvc.length > 4){
+            console.log(cvc.length);
+            newErrors.cvc = 'Please enter in a valid CVC';
+        }
+        if (!nameOnCard.trim()){
+            console.log(nameOnCard);
+            newErrors.nameOnCard = 'Please provide the name that is on the card';
+        }
+        if(Object.keys(newErrors).length > 0){
+            setErrors(newErrors);
+            return;
+        }
+
+        // I cannot get this working in time so I am gonna scrap it 
+        
+        // try{
+        //     const response = await fetch('http://localhost:5000/api/save-payment',{
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //           body: JSON.stringify({
+        //             cardNumber: e.cardNumber,
+        //             expDate: e.expDate,
+        //             cvc: e.cvc,
+        //             nameOnCard: e.nameOnCard,
+        //             nickname: e.nickname
+        //           }),
+        //     });
+
+        //     const data = await response.json();
+
+        //     if (response.status === 201){
+        //         onClose
+        //     } else {
+        //         setErrors(data.errors);
+        //     }
+        // } catch(error){
+        //     console.log(error);
+        // }
+    };
 
     if (!isOpen) {
         return null;
@@ -70,30 +144,34 @@ const Card = ({ isOpen, onClose }) => {
 
                     <div className="form-group">
                         <label>Card number</label>
-                        <input type="text" placeholder="Card number" required />
+                        <input type="text" placeholder="Card number" name='cardNum' value={cardNumber} onChange={handleChange} required />
+                        {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
                     </div>
 
                     <div className="form-row">
                         <div className="form-group">
                             <label>Expiration date (MM / YY)</label>
-                            <input type="text" placeholder="MM / YY" required />
+                            <input type="date" placeholder="" name='expDate' value={expDate} onChange={handleChange} required />
+                            {errors.expDate && <span className="error">{errors.expDate}</span>}
                         </div>
 
                         <div className="form-group">
                             <label>Security code</label>
-                            <input type="text" placeholder="Security code" required />
+                            <input type="text" placeholder="Security code" name='cvc' value={cvc} onChange={handleChange} required />
+                            {errors.cvc && <span className="error">{errors.cvc}</span>}
                         </div>
                     </div>
 
                     <div className="form-group">
                         <label>Name on card</label>
-                        <input type="text" placeholder="Name on card" required />
+                        <input type="text" placeholder="Name on card" name='cardHolder' value={nameOnCard} onChange={handleChange} required />
                         <small>Enter your name exactly as it’s written on your card</small>
+                        {errors.nameOnCard && <span className="error">{errors.nameOnCard}</span>}
                     </div>
 
                     <div className="form-group">
                         <label>Nickname (optional)</label>
-                        <input type="text" placeholder="Nickname" />
+                        <input type="text" placeholder="Nickname" name="nickname" value={nickname} onChange={handleChange}/>
                     </div>
 
                     <div className="form-group checkbox-group">
@@ -106,7 +184,7 @@ const Card = ({ isOpen, onClose }) => {
                    
                     {billingAddressContent}
                     <div className="buttons-container">
-                        <button type="submit" className="save-button">Save</button>
+                        <button type="button" className="save-button" onClick={saveCard}>Save</button>
                         <button type="button" className="cancel-button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
