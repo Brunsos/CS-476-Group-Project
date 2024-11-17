@@ -5,21 +5,27 @@ import { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 
 function ShoppingCart() {
+    // set the defualt value
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
     const [imageUrls, setImageUrls] = useState({});
 
+    // useEffect hook to fetch the list of plants when the component mounts
     useEffect(() => {
+
+        // Define an asynchronous function to check the user's session
         const checkSession = async () => {
             try {
+                // Send a request to the server to check the user's role
                 const response = await fetch('http://localhost:5000/api/user-role', {
-                    credentials: 'include'
+                    credentials: 'include' // Include cookies in the request for session management
                 });
                 
                 if (!response.ok) {
                     throw new Error('Not authenticated');
                 }
 
+                // Parse the server's JSON response
                 const data = await response.json();
                 if (data.isVendor) {
                     // If user is a vendor, redirect to vendor page
@@ -40,14 +46,16 @@ function ShoppingCart() {
 
     const fetchCart = async () => {
         try {
+            // Send a request to the server to the cart endpoint
             const response = await fetch('http://localhost:5000/api/cart', {
-                credentials: 'include'
+                credentials: 'include' // Include cookies in the request for session management
             });
             
             if (!response.ok) {
                 throw new Error('Failed to load items');
             }
             
+            // Parse the server's JSON response
             const data = await response.json();
             setItems(data);
             
@@ -62,15 +70,17 @@ function ShoppingCart() {
 
     const handleDelete = async (id) => {
         try {
+            // // Send a DELETE request to the server to remove the plant with the given id
             const response = await fetch(`http://localhost:5000/api/cart/item/${id}`, {
-                method: 'DELETE', 
-                credentials: 'include' 
+                method: 'DELETE', // Specify the HTTP method for deletion
+                credentials: 'include'  // Include cookies in the request for session management
             });
 
             if (!response.ok) {
                 throw new Error('Failed to delete item');
             }
 
+            // Update the local state by removing the deleted plant
             setItems((prevCart) => prevCart.filter(item => item._id !== id));
         } catch (error) {
             console.error("Error removing product from cart:", error);
@@ -81,18 +91,23 @@ function ShoppingCart() {
         try {
             console.log("Loading image for plantId:", plantId);
 
+            // Send the request to the server to get the plant's image by its id
             const response = await fetch(`http://localhost:5000/image/${plantId}`, {
-                credentials: 'include'
+                credentials: 'include' // Include cookies in the request for session management
             });
 
             if (!response.ok) throw new Error('Failed to load image');
 
+            // Convert the response into a Blob object for handling binary data
             const blob = await response.blob();
+
+            // Create a temporary URL for the Blob object to use in the browser
             const url = URL.createObjectURL(blob);
 
+            // Update the state to store the generated URL for the specific plant ID
             setImageUrls(prev => ({
-                ...prev,
-                [plantId]: url
+                ...prev, // Spread the existing image URLs to retain previous entries
+                [plantId]: url  // Add or update the URL for the current plant's image
             }));
 
             console.log("Successfully loaded image for plantId:", plantId);
@@ -101,15 +116,18 @@ function ShoppingCart() {
         }
       };
 
+      // navigate user to shipping page
     const handleCheckout = () => {
         navigate('/shipping');
     };
 
+    // calculate the total price
     const totalPrice = items.reduce((sum, item) => {
         const itemTotal = item.price * item.quantity;
         return sum + itemTotal;
     }, 0);
 
+    // calculate the number of total items
     const totalItem = items.reduce((counter, item) => {
         return counter + item.quantity;
     }, 0);

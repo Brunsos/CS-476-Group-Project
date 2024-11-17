@@ -6,40 +6,55 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 
 function Vendor() {
+  // set the defualt value
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
 
+  // nevigate to list page
   const goToListPage = () => {
     navigate('/list');
-};
+  };
 
+  // Function to handle form submission
   const handleSubmit = (event) => {
+    // Prevent default form submission to handle it programmatically
     event.preventDefault();
+
+     // Navigate to the vendor post page when the form is submitted
     navigate('/vendorPost');
   };
 
+  // Function to handle the deletion of a plant
   const handleDelete = async (id) => {
     try {
+      // Send a DELETE request to the server to remove the plant with the given id
       const response = await fetch(`http://localhost:5000/api/plants/${id}`, {
-        method: 'DELETE',
+        method: 'DELETE', // Specify the HTTP method for deletion
       });
+
+      // Check if the response indicates success
       if (!response.ok) throw new Error('Failed to delete plant');
 
+      // Update the local state by removing the deleted plant
       setPlants((prevPlants) => prevPlants.filter((plant) => plant._id !== id));
       alert('Plant deleted successfully');
     } catch (error) {
       console.error('Error deleting plant:', error);
-      alert('Failed to delete plant');
     }
   };
 
+  // useEffect hook to fetch the list of plants when the component mounts
   useEffect(() => {
+    // Define an asynchronous function to fetch plants
     const fetchPlants = async () => {
         try {
+          // Send a GET request to fetch the list of plants for the vendor
             const response = await fetch('http://localhost:5000/api/vendor/plants', {
-              credentials: 'include'
+              credentials: 'include' // Include cookies for session handling
           });
             if (!response.ok) throw new Error('Failed to fetch plants');
+
+            // Parse the JSON response
             const data = await response.json();
             
             console.log("Fetched plant data:", data);

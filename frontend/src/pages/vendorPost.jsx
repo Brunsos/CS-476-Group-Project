@@ -29,13 +29,18 @@ const VendorPost = () => {
     if (name === 'countInStock') setcountInStock(value);
   };
 
+  // Define a function to handle changes when a file is selected in an input field
   const handleFileChange = (e) => {
+    // Update the 'image' state with the first file selected by the user
     setimage(e.target.files[0]);
   };
 
+  // Define a function to handle form submission
   const handleSubmit = async (e) => {
+    // Prevent the default form submission behavior to handle it via JavaScript
     e.preventDefault();
 
+     // Create a new FormData object to package form data, including the image
     const formData = new FormData();
     formData.append('image', image);
     formData.append('common_name', common_name);
@@ -45,15 +50,18 @@ const VendorPost = () => {
     formData.append('countInStock', countInStock);
     
     try {
+      // Send the form data to the server using a POST request
         const response = await fetch('http://localhost:5000/vendorPost', {
-            method: 'POST',
-            credentials: 'include',
-            body: formData,
+            method: 'POST', // Specify the HTTP method as POST for creating a new resource
+            credentials: 'include', // Include cookies in the request for session management
+            body: formData, // Attach the FormData object as the request body
         });
     
+        // Parse the server's JSON response
         const result = await response.json();
         console.log(result);
     
+        // Check if the request was successful
         if (response.ok) {
             navigate('/vendor');
         } else {

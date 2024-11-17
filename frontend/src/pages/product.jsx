@@ -7,6 +7,7 @@ import Sidebar from './sidebar';
 
 
 function ProductPage() {
+  // set the defualt value
   const { id } = useParams();
   const [product, setProduct] = useState([]);
   const [user, setUser] = useState([]);
@@ -16,9 +17,10 @@ function ProductPage() {
     try {
       // send a request to add product to cart and get the response from backend
       const response = await fetch('http://localhost:5000/api/addcart', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
+            method: 'POST', // Specify the HTTP method as POST for creating a new resource
+            headers: { 'Content-Type': 'application/json' }, // Indicate that the request body contains JSON
+            credentials: 'include', // Include cookies in the request for session management
+            // Convert the provided data into a JSON string to include in the request body
             body: JSON.stringify({
                 plantId: plant._id,
                 name: plant.common_name,
@@ -40,7 +42,7 @@ function ProductPage() {
         try {
           // send a request to validate the session
             const response = await fetch('http://localhost:5000/api/user-role', {
-                credentials: 'include'
+                credentials: 'include' // Include cookies in the request for session management
             });
             
             if (!response.ok) {
@@ -66,7 +68,7 @@ function ProductPage() {
         try {
           // get the response from backend
           const response = await fetch(`http://localhost:5000/product/${id}`,{
-            credentials: 'include'
+            credentials: 'include' // Include cookies in the request for session management
           });
           if (response.ok) {
             // Parse the response JSON to data

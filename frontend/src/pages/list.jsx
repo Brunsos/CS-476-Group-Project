@@ -7,6 +7,7 @@ import { Children } from 'react';
 import Sidebar from './sidebar';
 
 function Shop() {
+  // set the defualt value
   const [plants, setPlants] = useState([]);
   const [brands, setBrands] = useState([]);
   
@@ -16,12 +17,15 @@ function Shop() {
   const [priceFilter, setPriceFilter] = useState([]);
   const [plantCards, setPlantCards] = useState([]);
 
+  // add a plant to cart db
   const addToCart = async (plant) => {
     try {
+      // Send a POST request to the addcart endpoint
       const response = await fetch('http://localhost:5000/api/addcart', {
-            credentials: 'include',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // Include cookies in the request for session management
+            method: 'POST', // HTTP method for creating new resources
+            headers: { 'Content-Type': 'application/json' },  // Indicate that the request body contains JSON
+            // Convert the provided data into a JSON string to include in the request body
             body: JSON.stringify({
                 plantId: plant._id,
                 name: plant.common_name,
@@ -41,10 +45,14 @@ function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        // Send a request to get the plants
         const response = await fetch('http://localhost:5000/api/plants');
         if (!response.ok) throw new Error('Failed to fetch products');
+
+        // Parse the response JSON
         const data = await response.json();
 
+        // set the plant data
         setPlants(data);
         setPlantFilter(data);
       } catch (error) {
@@ -58,10 +66,14 @@ function Shop() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
+        // Send a request to the get the vendors
         const response = await fetch('http://localhost:5000/api/vendors');
         if (!response.ok) throw new Error('Failed to fetch vendors');
+
+        // Parse the response JSON
         const data = await response.json();
 
+        // set the brands data
         setBrands(data);
         setBrandFilter(data);
       } catch (error) {

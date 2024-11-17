@@ -75,12 +75,13 @@ const Signup = () => {
     }
 
     try {
-      // send a request to add product to cart and get the response from backend
+      // Send a POST request to the signup endpoint
       const response = await fetch('http://localhost:5000/signup', {
-        method: 'POST',
+        method: 'POST', // Specify the HTTP method as POST for creating a new resource
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', // Indicate that the request body contains JSON
         },
+        // Convert the provided data into a JSON string to include in the request body
         body: JSON.stringify({
           userName,
           province,

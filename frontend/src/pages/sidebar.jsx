@@ -10,10 +10,10 @@ const Sidebar = () => {
     const handleLogout = async () => { // handles logout when logout button clicked
         try {
             const response = await fetch('http://localhost:5000/logout', {
-                method: 'POST',
-                credentials: 'include',
+                method: 'POST', // Specify the HTTP method as POST for creating a new resource
+                credentials: 'include', // Include cookies for session handling
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json' // Indicate that the request body contains JSON
                 }
             });
 
@@ -35,16 +35,23 @@ const Sidebar = () => {
             try {
                 // First check localStorage
                 const storedUser = localStorage.getItem('user');
+
+                // Check if 'user' data exists in localStorage
                 if (storedUser) {
+                    // Parse the stored JSON string into a JavaScript object
                     const userData = JSON.parse(storedUser);
+
+                    // Update the state to reflect the user's role (vendor or buyer)
                     setIsVendor(userData.isVendor);
+
+                    // Update the state to indicate the user is logged in
                     setIsLoggedIn(true);
                 }
                 // Then verify with server
                 const response = await fetch('http://localhost:5000/api/user-role', {
-                    credentials: 'include',
+                    credentials: 'include', // Include cookies for session handling
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json' // Indicate that the request body contains JSON
                     }
                 });
                 if (response.ok) {
@@ -53,6 +60,8 @@ const Sidebar = () => {
                 } else if (response.status === 401) {
                     // Handle unauthorized - clear local storage
                     localStorage.removeItem('user');
+
+                    // if there is no login nor user's role
                     setIsVendor(false);
                     setIsLoggedIn(false);
                 }
