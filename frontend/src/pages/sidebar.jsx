@@ -76,7 +76,7 @@ const Sidebar = () => {
                         <li>
                             <Link to="/profile">
                                 <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
-                                <span>Profile</span>
+                                <span>Edit Profile</span>
                             </Link>
                         </li>
                         {isVendor && ( 
