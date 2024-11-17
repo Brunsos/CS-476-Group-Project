@@ -9,7 +9,7 @@ const Sidebar = () => {
 
     const handleLogout = async () => { // handles logout when logout button clicked
         try {
-            const response = await fetch('http://localhost:5000/logout', { //route
+            const response = await fetch('http://localhost:5000/logout', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -73,14 +73,12 @@ const Sidebar = () => {
                         <span>Home</span>
                     </Link>
                 </li>
-                {!isVendor && isLoggedIn && (
-                    <li>
-                        <Link to="/list">
-                            <img src="http://localhost:5173/src/assets/shop.png" alt="list" />
-                            <span>Shop</span>
-                        </Link>
-                    </li>
-                )}
+                <li>
+                    <Link to="/list">
+                        <img src="http://localhost:5173/src/assets/shop.png" alt="list" />
+                        <span>Shop</span>
+                    </Link>
+                </li>
                 {!isVendor && isLoggedIn && (
                     <li>
                         <Link to="/cart">
@@ -88,23 +86,6 @@ const Sidebar = () => {
                             <span>Cart</span>
                         </Link>
                     </li>
-                )}
-                {isVendor && isLoggedIn && ( 
-                    // only show if user is vendor
-                    <>
-                    <li>
-                        <Link to="/vendor">
-                            <img src="http://localhost:5173/src/assets/vendor.png" alt="Vendor" />
-                            <span>Vendor</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/Ordercheckout">
-                            <img src="http://localhost:5173/src/assets/checkout.png" alt="Ordercheckout" />
-                            <span>Order checkout</span>
-                        </Link>
-                    </li>
-                    </>
                 )}
             </ul>
             <ul className="bottom-links">
@@ -116,6 +97,23 @@ const Sidebar = () => {
                                 <span>Profile</span>
                             </Link>
                         </li>
+                        {isVendor && ( 
+                            // only show if user is vendor
+                            <>
+                            <li>
+                                <Link to="/vendor">
+                                    <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
+                                    <span>Vendor</span>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/Ordercheckout">
+                                    <img src="http://localhost:5173/src/assets/checkout.png" alt="Ordercheckout" />
+                                    <span>Order checkout</span>
+                                </Link>
+                            </li>
+                            </>
+                        )}
                             <li>
                                 <button onClick={handleLogout} className="sidebar-button"> 
                                     <img src="http://localhost:5173/src/assets/logout.png" alt="Logout" />
