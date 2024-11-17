@@ -106,19 +106,19 @@ function Shop() {
       var plantCard =  (
       
       <section key={obj._id} id="product-container">
-        <div className="product-card">
-          <div className="product-image-container">
-            <img src={`data:image/jpeg;base64,${obj.image}`} alt={obj.common_name} className="product-image" />
-          </div>
+        <div className="list-product-card">
+         
+            <img src={`data:image/jpeg;base64,${obj.image}`} alt={obj.common_name} className="list-product-image" />
+          
 
-          <h2 className="product-title">{obj.common_name}</h2>
+          <h2 className="list-product-title">{obj.common_name}</h2>
 
-          <div className="product-description-container">
+          <div className="list-product-description">
             <p>{obj.description}</p>
           </div>
 
-          <p className="product-price">`Price: ${obj.price}`</p>
-          <button onClick={() => addToCart(obj)} className="read-more-button">Add to cart</button>
+          <p className="list-product-price">`Price: ${obj.price}`</p>
+          <button onClick={() => addToCart(obj)} className="list-button">Add to cart</button>
         </div>
       </section>
       );
@@ -196,7 +196,7 @@ function Shop() {
       <div className="sidebar">
         <Sidebar />
       </div>
-      <div id="shop-page">
+      <div id="list-page">
         <aside id="filter-container">
           <h1>Filter by Plants</h1>
           <section id='plants'>
@@ -221,7 +221,9 @@ function Shop() {
           <input type="number" placeholder="Enter Price" name="price" onChange={handleChange}/>
           <button className="reset-button">Reset</button>
         </aside>
+        <div className="product-content">
         {plantCards}
+        </div>
       </div>
     </div>
   );
