@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import Buyer from "../db/buyer.js";  // Import the Buyer model
 import Vendor from "../db/vendor.js"; // Import the Vendor model
-import Plant from "../db/plant.js";
+import Plant from "../db/plant.js"; // Import the Plant model
+import Payment from "../db/paymentInfo.js"; // Import the Credit/Debit card model
 import Cart from "../db/cart.js"
 import cors from "cors";
 import multer from 'multer';
@@ -409,6 +410,99 @@ app.get('/api/user-role', (req, res) => {
         res.status(500).json({ msg: 'Server error checking user role' });
     }
 });
+
+
+// Gets the specific users shipping info
+app.get('/api/specific-user', async (req, res) => {
+    try {
+        console.log('Session data on /api/specific-user:', req.session);
+        
+        // Confirms that the user is logged in
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ msg: 'No session found' });
+        }
+        
+        // Find the specific user using their unique ID
+        const user = req.session.user.id;
+        const userInfo = await Buyer.findById(user);
+        
+        // Send the sought after shipping results back as a JSON object
+        res.status(200).json({ 
+            id: userInfo.id,
+            province: userInfo.province,
+            city: userInfo.city,
+            address: userInfo.address ,
+            savedCards: userInfo.savedCards
+        });
+    } catch (error) {
+        console.error('Error in /api/specific-user', error);
+        res.status(500).json({ msg: 'Server error checking for specific user' });
+    }
+});
+
+// I unfortunately don't have time to finalized this and make it work
+// app.post('/api/save-payment', async (req, res) => {
+
+//     if (!req.session.user || req.session.user.isVendor) {
+//         return res.status(401).json({ message: "Unauthorized: Only buyers can add to cart" });
+//     }
+
+//     const {cardNumber, expDate, cvc, nameOnCard, nickname} = req.body;
+//     const user = req.session.user.id;
+//     console.log(user);
+//     const userInfo = await Buyer.findById(user);
+
+//     try {
+//         if(userInfo.savedCards.contains(cardNumber)){
+//             res.status(400).json({msg: "The card is already registered"});
+//         }
+//         else{
+//             let addCard = new Payment({cardNumber, expDate, cvc, nameOnCard, nickname});
+//             await addCard.save();
+//             res.status(201).json({msg: "Card added successfully"});
+//             req.session.user.savedCards.push(addCard)
+//         }
+//     } catch (error){
+//         console.log(error);
+//         res.status(500).json({msg: 'Server error adding card'})
+//     }
+// })
+
+// Unfortunately I also ran out of time to implement this feaure as well 
+// app.put('/api/purchased', async(req, res) => {
+//     if (!req.session.user || req.session.user.isVendor) {
+//         return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+//     };
+
+//     try{
+//         // Find the users cart
+//         console.log("in the purchased");
+//         const user = req.session.user.id;
+//         const cartItems = await Cart.find({buyerId: user});
+//         const items = cartItems.map(x => x);
+//         console.log(items);
+
+//         const plantIDs = items.forEach(obj => obj.plantId.toString()).map(x => x);
+//         console.log(plantIDs);
+//         items.forEach(obj => console.log(obj.quantity));
+//         items.forEach(obj => {
+//             const newBlah = Plant.findById(obj.plantId);
+//             const newnewBlah = newBlah.map(x = x._id);    
+//             console.log(newnewBlah);
+//     });
+//         items.forEach(obj => Plant.findByIdAndUpdate(plantIDs, {countInStock: countInStock - obj.quantity}));
+//         // Find the items in said cart
+//         // for (const value in items){
+//         //     const obj = items.at(value);
+//         //     console.log(obj);
+//         //     Plant.findByIdAndUpdate(obj._id, {countInStock: countInStock - obj.quantity});
+//         // }
+//         res.status(200).json({message: "Plant updated successfully"});
+//         // Decrease the quantity by how much they ordered (max is one as of right now?)
+//     } catch(error){
+//         res.status(500).json({ message: "Error being purchased", error });
+//     }
+// })
 
 // login router
 app.post("/login", async (req, res) => {
