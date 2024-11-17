@@ -8,8 +8,6 @@ import Sidebar from './sidebar';
 function Vendor() {
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const goToListPage = () => {
     navigate('/list');
