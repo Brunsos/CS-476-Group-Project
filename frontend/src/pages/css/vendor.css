@@ -9,9 +9,21 @@
     padding: 40px;
   }
 
-  #vendor-form {
-    margin-bottom: 40px;
-    margin-left: 200px;
+  .vendor-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .special-products-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .special-products-title {
+    margin: 0;
   }
 
   #vendor-form input {
@@ -22,29 +34,67 @@
     border-radius: 5px;
   }
 
-  #vendor-form button {
-    padding: 10px 15px;
-    font-size: 14px;
-    color: #fff;
+  .special-product-list {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px; 
+    justify-items: center; 
+  }
+
+  .special-product-card {
+    margin: 0;
+    padding: 10px;
+  }
+  
+  .vendor-header-buttons{
+    margin:10px;
+  }
+  .vendor-add-button {
     background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+  
   }
 
-  .category-list button {
-    padding: 10px 15px;
-    margin-left: 200px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    background-color: #6c757d;
-    color: #fff;
+  .vendor-shop-button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    margin-left:10px;
+  
   }
 
-  .category-list button:hover {
-    background-color: #5a6268;
+  .product-price {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .delete-button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-left: 20px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    text-align: center;
   }

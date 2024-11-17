@@ -14,6 +14,7 @@ function Orders() {
     useEffect(() => {
         const checkSession = async () => {
             try {
+                // send a request to validate the session
                 const response = await fetch('http://localhost:5000/api/user-role', {
                     credentials: 'include'
                 });
@@ -43,6 +44,7 @@ function Orders() {
 
     const fetchOrder = async () => {
         try {
+            // send a request to backend and get the response from backend
             const response = await fetch('http://localhost:5000/api/order', {
                 credentials: 'include'
             });
@@ -51,6 +53,7 @@ function Orders() {
                 throw new Error('Failed to load items');
             }
             
+            // Parse the response JSON to data
             const data = await response.json();
             setItems(data);
             
@@ -65,6 +68,7 @@ function Orders() {
 
     const fetchBuyerInfo = async () => {
         try {
+            // send a request to backend and get the response from backend
             const response = await fetch('http://localhost:5000/api/buyerInfo', {
                 credentials: 'include'
             });
@@ -73,7 +77,9 @@ function Orders() {
                 throw new Error('Failed to load items');
             }
             
+            // Parse the response JSON to data
             const data = await response.json();
+            // update the state for buyer
             setBuyer(data);
             
         } catch (error) {
@@ -85,15 +91,20 @@ function Orders() {
         try {
             console.log("Loading image for plantId:", plantId);
 
+            // send a request to backend and get the response from backend
             const response = await fetch(`http://localhost:5000/image/${plantId}`, {
                 credentials: 'include'
             });
 
             if (!response.ok) throw new Error('Failed to load image');
 
+            // Convert the response data into a Blob object
             const blob = await response.blob();
+
+            // Generate a temporary URL for the Blob to use in the frontend
             const url = URL.createObjectURL(blob);
 
+            // Update the state to include the image URL for the current plant ID
             setImageUrls(prev => ({
                 ...prev,
                 [plantId]: url
@@ -113,11 +124,13 @@ function Orders() {
         setShowDetails(false); //otherwise..
     };
 
+    // calculate the total price
     const totalPrice = items.reduce((sum, item) => {
         const itemTotal = item.price * item.quantity;
         return sum + itemTotal;
     }, 0);
 
+    // calculate the total number of items
     const totalItem = items.reduce((counter, item) => {
         return counter + item.quantity;
     }, 0);

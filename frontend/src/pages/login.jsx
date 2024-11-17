@@ -11,6 +11,7 @@ const Login = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
+// error check for the login form
 const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -34,7 +35,7 @@ const handleLogin = async (e) => {
       return;
     }
 
-
+// pass the data to backend
 try {
     const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
@@ -45,8 +46,10 @@ try {
         body: JSON.stringify({ email, password }),
     });
 
+    // get the response from backend
     const data = await response.json();
 
+    // if everything ok, direct user to main page
     if (response.ok) {
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/mainPage');
