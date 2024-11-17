@@ -6,6 +6,7 @@ import Sidebar from './sidebar';
 
 
 const VendorPost = () => {
+  // set the defualt value
   const [image, setimage] = useState(null);
   const [common_name, setcommon_name] = useState('');
   const [price, setprice] = useState('');
@@ -15,8 +16,12 @@ const VendorPost = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  // Define a function to handle changes in form inputs
   const handleChange = (e) => {
+    // Destructure the name and value from the event's target element
     const { name, value } = e.target;
+
+    // Check the name of the input field and update the corresponding state variable
     if (name === 'common_name') setcommon_name(value);
     if (name === 'price') setprice(value);
     if (name === 'ecozone') setecozone(value);

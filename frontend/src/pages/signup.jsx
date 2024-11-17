@@ -2,7 +2,6 @@ import './css/signup.css';
 import './css/sidebar.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import Sidebar from './sidebar';
 
 
@@ -19,8 +18,12 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  // Define a function to handle changes in form inputs
   const handleChange = (e) => {
+    // Destructure the name and value from the event's target element
     const { name, value } = e.target;
+
+    // Check the name of the input field and update the corresponding state variable
     if (name === 'userName') setuserName(value);
     if (name === 'province') setProvince(value);
     if (name === 'city') setCity(value);
@@ -31,9 +34,11 @@ const Signup = () => {
     if (name === 'isVendor') setIsVendor(value);
   };
 
+  // function to handle the submit event
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // set the error field to blank
     setErrors({});
 
     const newErrors = {};
