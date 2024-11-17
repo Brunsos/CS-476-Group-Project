@@ -7,6 +7,7 @@ import Sidebar from './sidebar';
 
 
 const Signup = () => {
+  // set the defualt value
   const [userName, setuserName] = useState('');
   const [province, setProvince] = useState('');
   const [city, setCity] = useState('');
@@ -37,6 +38,7 @@ const Signup = () => {
 
     const newErrors = {};
 
+    // error check
     if (!userName.trim()) {
       newErrors.userName = 'user name is required.';
     }
@@ -68,6 +70,7 @@ const Signup = () => {
     }
 
     try {
+      // send a request to add product to cart and get the response from backend
       const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: {
@@ -85,11 +88,13 @@ const Signup = () => {
         }),
       });
     
+      // Parse the response JSON
       const data = await response.json();
     
+      // if everything ok
       if (response.status === 201) {
         navigate('/login');
-      } 
+      } // otherwise
       else if(response.status === 400) {
         setErrors(data.errors);
       }

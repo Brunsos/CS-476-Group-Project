@@ -16,6 +16,27 @@ function Shop() {
   const [priceFilter, setPriceFilter] = useState([]);
   const [plantCards, setPlantCards] = useState([]);
 
+  const addToCart = async (plant) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/addcart', {
+            credentials: 'include',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantId: plant._id,
+                name: plant.common_name,
+                price: plant.price
+            })
+        });
+        console.log(`${plant.name} added to cart`);
+        if (!response.ok) {
+          throw new Error("Failed to add to cart");
+        }
+    } catch (error) {
+        console.error("Error adding plant to cart:", error);
+    }
+  };
+
   // Fetch the list of plants for the page
   useEffect(() => {
     const fetchProducts = async () => {
@@ -85,7 +106,7 @@ function Shop() {
           </div>
 
           <p className="product-price">`Price: ${obj.price}`</p>
-          <button className="read-more-button">Add to cart</button>
+          <button onClick={() => addToCart(obj)} className="read-more-button">Add to cart</button>
         </div>
       </section>
       );

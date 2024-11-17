@@ -56,11 +56,14 @@ function HomePage() {
             try {
                 const response = await fetch('http://localhost:5000/api/plants');
                 if (!response.ok) throw new Error('Failed to fetch plants');
+
+                // get the response from backend
                 const data = await response.json();
                 
                 console.log("Fetched plant data:", data);
                 console.log("Plant image data:", data.map(plant => plant.image));
 
+                // set the plant with data passed from backend
                 setPlants(data);
             } catch (error) {
                 console.error('Error:', error);
@@ -94,7 +97,7 @@ function HomePage() {
                         <div key={plant._id} className="special-product-card">
                             <img src={`data:image/jpeg;base64,${plant.image}`} alt={plant.common_name} className="special-product-image" />
                             <Link to={`/product/${plant._id}`} key={plant._id} className='special-product-name'>{plant.common_name}</Link>
-                            <p>{plant.description}</p>
+                            <p className="product-description">{plant.description}</p>
                             <p className="product-price">Price: ${plant.price}</p>
                         </div>
                     ))}

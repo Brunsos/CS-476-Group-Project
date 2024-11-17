@@ -9,8 +9,8 @@ import List from './pages/list.jsx';
 import Cart from './pages/cart.jsx';
 import Shipping from './pages/shipping.jsx';
 import PlaceOrder from './pages/placeOrder.jsx';
-import Favorite from './pages/favorite.jsx';
 import ProfilePage from './pages/profilePage.jsx';
+import Ordercheckout from './pages/Ordercheckout.jsx';
 
 const App = () => {
   return (
@@ -26,9 +26,9 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/shipping" element={<Shipping />} />
         <Route path="/placeorder" element={<PlaceOrder />} />
-        <Route path="/favorite" element={<Favorite />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/Ordercheckout" element={<Ordercheckout />} />
       </Routes>
     </Router>
   );

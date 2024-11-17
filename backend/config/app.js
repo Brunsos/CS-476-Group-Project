@@ -91,6 +91,8 @@ app.post("/signup", async (req, res) => {
         }
         else{
             
+
+            // if the user is buyer then create new buyer
             buyer = new Buyer({ userName, email, password, province, city, address, isVendor});
 
             await buyer.save();
@@ -170,10 +172,12 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
 // Retrieves all plant objects from mongodb and converts the    //
 // plant images to base64                                       //
 //************************************************************* */
+
 app.get('/api/plants', async (req, res) => {
     console.log('GET /api/plants route called');
     console.log(req.isVendor);
     try {
+
         //returns all plant objects from mongodb
         const plants = await Plant.find({});
 
@@ -235,6 +239,7 @@ app.get('/api/vendor/plants', async (req, res) => {
 app.get('/api/vendors', async (req, res) => {
     console.log('GET /api/vendor route called');
     try {
+        // pull all vendor in mongodb by find
         const vendorOpt = await Vendor.find({});
 
         res.json(vendorOpt);
@@ -252,12 +257,15 @@ app.get('/api/vendors', async (req, res) => {
 //************************************************************* */
 app.get("/product/:id", async (req, res) => {
     try {
+        // find single plant by its id
         const product = await Plant.findById(req.params.id);
         console.log("this is product information: ",product);
         
 
+        // transform each plant document to include base64 encoded image
         const productImages = {
             ...product.toObject(),
+            // Convert plant images to base64
             image: product.image.toString('base64')
         };
         
@@ -265,7 +273,7 @@ app.get("/product/:id", async (req, res) => {
     } catch (error) {
       res.status(500).send({ message: "Error fetching product" });
     }
-  });
+});
 
 //******************************************************* */
 // Finds a plant object by its ID and deletes that plant  //                       
@@ -273,6 +281,7 @@ app.get("/product/:id", async (req, res) => {
 //******************************************************* */
 app.delete('/api/plants/:id', async (req, res) => {
     try {
+        // find and delete the plant by its id
         const deletedPlant = await Plant.findByIdAndDelete(req.params.id);
         if (!deletedPlant) return res.status(404).json({ message: 'Plant not found' });
             res.status(200).json({ message: 'Plant deleted successfully' });
@@ -294,11 +303,21 @@ app.post('/api/addcart', async (req, res) => {
         return res.status(401).json({ message: "Unauthorized: Only buyers can add to cart" });
     }
 
+    // Destructure required fields from the request body
     const { plantId, name, price, quantity } = req.body;
+    // Extract the buyer's ID from the user session
     const buyerId = req.session.user.id;
     console.log("i am in the addcart");
 
     try {
+        console.log("trying to find the product");
+
+        // find the plant by its id
+        const plant = await Plant.findById(plantId);
+        if (!plant) {
+            return res.status(404).json({ message: "Plant not found" });
+        }
+
         // Check if item already exists in cart for this buyer
         const existingItem = await Cart.findOne({ 
             buyerId: buyerId,
@@ -310,9 +329,12 @@ app.post('/api/addcart', async (req, res) => {
             existingItem.quantity += quantity || 1;
             await existingItem.save();
             res.status(200).json(existingItem);
+
+            console.log("if the item exist");
         } else {
             // Create new cart item
             const item = await Cart.create({
+                vendorId: plant.vendorId,
                 buyerId,
                 plantId,
                 name,
@@ -321,6 +343,8 @@ app.post('/api/addcart', async (req, res) => {
             });
             res.status(200).json(item);
         }
+    
+        console.log("everything went good")
     } catch (error) {
         res.status(500).json({ message: "Error adding product to cart", error });
     }
@@ -336,8 +360,11 @@ app.get('/api/cart', async (req, res) => {
     }
 
     try {
+        // pass the session id to buyerid
         const buyerId = req.session.user.id;
+        // find the plant which contain the specific buyer id
         const cartItems = await Cart.find({ buyerId: buyerId });
+        // pass the data to frontend
         res.status(200).json(cartItems);
     } catch (error) {
         res.status(500).json({ message: "Error retrieving cart", error });
@@ -353,18 +380,28 @@ app.get('/image/:id', async (req, res) => {
     console.log("Inside get image route, id:", req.params.id);
 
     try {
+        // pass current id to plant
         const plant = await Plant.findById(req.params.id);
 
         console.log("Found plant:", plant ? "yes" : "no");
 
+        // if the plant exist and there is image for that plant
         if (plant && plant.image) {
+            // convert the image field to a Buffer
             const imageBuffer = Buffer.from(plant.image.toString('base64'), 'base64');
             //Tells the browser to treat the file as an image
             res.set('Content-Type', 'image/jpeg');
+            // send the data to frontend
             res.send(imageBuffer);
             // Express sends the plant image directly in binary format to the browser
             //res.send(plant.image);
         } else {
+            console.log("trying to delete item");
+            // if the plant have already been deletes in plant, delete it as well in cart
+            await Cart.findOneAndDelete({
+                plantId: req.params.id
+            });
+
             console.log("No plant or image found");
             res.status(404).send("Image not found");
         }
@@ -386,7 +423,9 @@ app.delete('/api/cart/item/:id', async (req, res) => {
     }
 
     try {
+        // pass session id to buyerid
         const buyerId = req.session.user.id;
+        // find and delete the plant stored in the db by the id passed from frontend and the buyerid
         const deletedItem = await Cart.findOneAndDelete({
             _id: req.params.id,
             buyerId: buyerId
@@ -402,7 +441,7 @@ app.delete('/api/cart/item/:id', async (req, res) => {
     }
 });
 
-  app.use((err, req, res, next) => {
+app.use((err, req, res, next) => {
     console.error('Error:', err.stack);
     res.status(500).json({ msg: err.message || 'Internal server error' });
 });
@@ -419,7 +458,7 @@ app.get('/api/user-role', (req, res) => {
         if (!req.session || !req.session.user) {
             return res.status(401).json({ msg: 'No session found' });
         }
-
+        // pass the user's isvendor and email property to frontend
         res.status(200).json({ 
             isVendor: req.session.user.isVendor,
             email: req.session.user.email 
@@ -443,17 +482,17 @@ app.post("/login", async (req, res) => {
     
     try {
         const { email, password } = req.body;
-
+        // error check, if there is no email and password send error
         if (!email || !password) {
             return res.status(400).json({ msg: 'Email and password are required' });
         }
-
+        // search the user's email in buyer and vendor db to check him/her is buyer or vendor
         const buyer = await Buyer.findOne({ email });
         const vendor = await Vendor.findOne({ email });
         
         let user = null;
         let isVendor = false;
-
+        // if user is buyer, check his pwd and pass corresponding value
         if (buyer) {
             if(password === buyer.password){
                 user = buyer;
@@ -462,6 +501,7 @@ app.post("/login", async (req, res) => {
                 errors.password = 'Invalid password';
             }
         } else if (vendor) {
+            // if user is buyer, check his pwd and pass corresponding value
             if(password === vendor.password){
                 user = vendor;
                 isVendor = true;
@@ -469,13 +509,14 @@ app.post("/login", async (req, res) => {
                 errors.password = 'Invalid password';
             }
         }else{
+            // if the email is not found
             errors.email = 'Invalid email';
         }
-
+        // check do we have error message to return
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({ errors });
         }
-
+        // if the user is not vendor nor buyer
         if (!user) {
             return res.status(401).json({ msg: 'Invalid credentials' });
         }
@@ -495,6 +536,7 @@ app.post("/login", async (req, res) => {
             }
 
             console.log('Session saved successfully:', req.session);
+            // return the user information
             res.status(200).json({
                 msg: 'Login successful',
                 user: {

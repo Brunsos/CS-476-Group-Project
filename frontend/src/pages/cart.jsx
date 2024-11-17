@@ -63,8 +63,8 @@ function ShoppingCart() {
     const handleDelete = async (id) => {
         try {
             const response = await fetch(`http://localhost:5000/api/cart/item/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+                method: 'DELETE', 
+                credentials: 'include' 
             });
 
             if (!response.ok) {

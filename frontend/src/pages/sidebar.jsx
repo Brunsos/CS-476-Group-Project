@@ -1,10 +1,34 @@
 import './css/sidebar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 const Sidebar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false); // track login for dynamic rendering
     const [isVendor, setIsVendor] = useState(false); // check if user is vendor 
+    const navigate = useNavigate(); // navigate after logout
+
+    const handleLogout = async () => { // handles logout when logout button clicked
+        try {
+            const response = await fetch('http://localhost:5000/logout', { //route
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('user'); //clear local storage
+                setIsLoggedIn(false); //clear conditional rendoring variables
+                setIsVendor(false);
+                navigate('/login'); // go to login page
+            } else {
+                console.error('Logout failed'); //error
+            }
+        } catch (error) { //other errors
+            console.error('Logout error:', error);
+        }
+    };
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -16,7 +40,6 @@ const Sidebar = () => {
                     setIsVendor(userData.isVendor);
                     setIsLoggedIn(true);
                 }
-
                 // Then verify with server
                 const response = await fetch('http://localhost:5000/api/user-role', {
                     credentials: 'include',
@@ -24,7 +47,6 @@ const Sidebar = () => {
                         'Content-Type': 'application/json'
                     }
                 });
-
                 if (response.ok) {
                     const data = await response.json();
                     setIsVendor(data.isVendor);
@@ -40,10 +62,8 @@ const Sidebar = () => {
                 setIsLoggedIn(false);
             } 
         };
-
         checkAuth();
     }, []);
-
     return (
         <div className="sidebar">
             <ul className="top-links">
@@ -59,7 +79,6 @@ const Sidebar = () => {
                         <span>Shop</span>
                     </Link>
                 </li>
-
                 {!isVendor && isLoggedIn && (
                     <li>
                         <Link to="/cart">
@@ -69,25 +88,38 @@ const Sidebar = () => {
                     </li>
                 )}
             </ul>
-
             <ul className="bottom-links">
                 {isLoggedIn ? (
                     <>
                         <li>
                             <Link to="/profile">
                                 <img src="http://localhost:5173/src/assets/person.png" alt="Profile" />
-                                <span>Edit Profile</span>
+                                <span>Profile</span>
                             </Link>
                         </li>
                         {isVendor && ( 
                             // only show if user is vendor
+                            <>
                             <li>
                                 <Link to="/vendor">
                                     <img src="http://localhost:5173/src/assets/login.jpg" alt="Vendor" />
                                     <span>Vendor</span>
                                 </Link>
                             </li>
+                            <li>
+                                <Link to="/Ordercheckout">
+                                    <img src="http://localhost:5173/src/assets/checkout.png" alt="Ordercheckout" />
+                                    <span>Order checkout</span>
+                                </Link>
+                            </li>
+                            </>
                         )}
+                            <li>
+                                <button onClick={handleLogout} className="sidebar-button"> 
+                                    <img src="http://localhost:5173/src/assets/logout.png" alt="Logout" />
+                                    <span>Logout</span>
+                                </button>
+                            </li>
                     </>
                 ) : (
                     // only show when not logged in

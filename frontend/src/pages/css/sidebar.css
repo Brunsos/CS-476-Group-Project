@@ -66,3 +66,21 @@
 .sidebar:hover ul li span {
   opacity: 1;
 }
+
+ /* for logout button */
+ .sidebar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding-left: 0px;
+  font-family: inherit;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.sidebar-button img {
+  width: 25px;
+  height: 25px;
+}
