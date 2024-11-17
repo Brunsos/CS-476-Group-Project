@@ -551,4 +551,19 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.post('/logout', (req, res) => {
+    try {
+        req.session.destroy((err) => { //destroy the session
+            if (err) {
+                return res.status(500).json({ msg: 'Could not log out, please try again' }); // error message
+            }
+            res.clearCookie('connect.sid'); // clear the session cookie
+            res.status(200).json({ msg: 'Logged out successfully' });
+        });
+    } catch (error) { // other errors
+        console.error('Logout error:', error);
+        res.status(500).json({ msg: 'Server error during logout' });
+    }
+});
+
 export default app;
