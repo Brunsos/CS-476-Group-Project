@@ -19,9 +19,10 @@ const Card = ({ isOpen, onClose }) => {
         if (name === "nickname") setNickname(value);
     };
 
-    const saveCard = async() => {
-    
+    const saveCard = async(e) => {
+
         setErrors({});
+
         const today = new Date();
         const newErrors = {};
         // Checks if the user has entered in a card that has correct amount of numbers, the industry standard is at least 15 (American Express)
@@ -50,31 +51,31 @@ const Card = ({ isOpen, onClose }) => {
             return;
         }
 
-        try{
-            const response = await fetch('http://localhost:5000/api/save-payment',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    cardNumber,
-                    expDate,
-                    cvc,
-                    nameOnCard,
-                    nickname
-                  }),
-            });
+        // I cannot get this working in time so I am gonna scrap it 
+        
+        // try{
+        //     const response = await fetch('http://localhost:5000/api/save-payment',{
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //           body: JSON.stringify({
+        //             cardNumber: e.cardNumber,
+        //             expDate: e.expDate,
+        //             cvc: e.cvc,
+        //             nameOnCard: e.nameOnCard,
+        //             nickname: e.nickname
+        //           }),
+        //     });
 
-            const data = await response.json();
+        //     const data = await response.json();
 
-            if (response.status === 201){
-                onClose
-            } else {
-                setErrors(data.errors);
-            }
-        } catch(error){
-            console.log(error);
-        }
+        //     if (response.status === 201){
+        //         onClose
+        //     } else {
+        //         setErrors(data.errors);
+        //     }
+        // } catch(error){
+        //     console.log(error);
+        // }
     };
 
     if (!isOpen) {

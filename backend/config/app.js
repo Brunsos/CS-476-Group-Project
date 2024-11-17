@@ -424,14 +424,16 @@ app.get('/api/specific-user', async (req, res) => {
         }
         
         // Find the specific user using their unique ID
-        const userInfo = await Buyer.findOne(req.session.user._id);
+        const user = req.session.user.id;
+        const userInfo = await Buyer.findById(user);
         
         // Send the sought after shipping results back as a JSON object
         res.status(200).json({ 
             id: userInfo.id,
             province: userInfo.province,
             city: userInfo.city,
-            address: userInfo.address 
+            address: userInfo.address ,
+            savedCards: userInfo.savedCards
         });
     } catch (error) {
         console.error('Error in /api/specific-user', error);
@@ -439,26 +441,69 @@ app.get('/api/specific-user', async (req, res) => {
     }
 });
 
-app.post('/api/save-payment', async (req, res) => {
-    let errors = {};
+// I unfortunately don't have time to finalized this and make it work
+// app.post('/api/save-payment', async (req, res) => {
 
-    const {cardNumber, expDate, cvc, nameOnCard, nickname} = req.body;
+//     if (!req.session.user || req.session.user.isVendor) {
+//         return res.status(401).json({ message: "Unauthorized: Only buyers can add to cart" });
+//     }
 
-    try {
-        if(req.session.user.savedCards.contains(cardNumber)){
-            res.status(400).json({msg: "The card is already registered"});
-        }
-        else{
-            let addCard = new Payment({cardNumber, expDate, cvc, nameOnCard, nickname});
-            await addCard.save();
-            res.status(201).json({msg: "Card added successfully"});
-            req.session.user.savedCards.push(addCard)
-        }
-    } catch (error){
-        console.log(error);
-        res.status(500).json({msg: 'Server error adding card'})
-    }
-})
+//     const {cardNumber, expDate, cvc, nameOnCard, nickname} = req.body;
+//     const user = req.session.user.id;
+//     console.log(user);
+//     const userInfo = await Buyer.findById(user);
+
+//     try {
+//         if(userInfo.savedCards.contains(cardNumber)){
+//             res.status(400).json({msg: "The card is already registered"});
+//         }
+//         else{
+//             let addCard = new Payment({cardNumber, expDate, cvc, nameOnCard, nickname});
+//             await addCard.save();
+//             res.status(201).json({msg: "Card added successfully"});
+//             req.session.user.savedCards.push(addCard)
+//         }
+//     } catch (error){
+//         console.log(error);
+//         res.status(500).json({msg: 'Server error adding card'})
+//     }
+// })
+
+// Unfortunately I also ran out of time to implement this feaure as well 
+// app.put('/api/purchased', async(req, res) => {
+//     if (!req.session.user || req.session.user.isVendor) {
+//         return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+//     };
+
+//     try{
+//         // Find the users cart
+//         console.log("in the purchased");
+//         const user = req.session.user.id;
+//         const cartItems = await Cart.find({buyerId: user});
+//         const items = cartItems.map(x => x);
+//         console.log(items);
+
+//         const plantIDs = items.forEach(obj => obj.plantId.toString()).map(x => x);
+//         console.log(plantIDs);
+//         items.forEach(obj => console.log(obj.quantity));
+//         items.forEach(obj => {
+//             const newBlah = Plant.findById(obj.plantId);
+//             const newnewBlah = newBlah.map(x = x._id);    
+//             console.log(newnewBlah);
+//     });
+//         items.forEach(obj => Plant.findByIdAndUpdate(plantIDs, {countInStock: countInStock - obj.quantity}));
+//         // Find the items in said cart
+//         // for (const value in items){
+//         //     const obj = items.at(value);
+//         //     console.log(obj);
+//         //     Plant.findByIdAndUpdate(obj._id, {countInStock: countInStock - obj.quantity});
+//         // }
+//         res.status(200).json({message: "Plant updated successfully"});
+//         // Decrease the quantity by how much they ordered (max is one as of right now?)
+//     } catch(error){
+//         res.status(500).json({ message: "Error being purchased", error });
+//     }
+// })
 
 app.post("/login", async (req, res) => {
     console.log('Login attempt with:', req.body);

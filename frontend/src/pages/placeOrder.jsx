@@ -2,10 +2,112 @@ import './css/placeOrder.css';
 import './css/sidebar.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 
 
 function PlaceOrder() {
+    const navigate = useNavigate();
+    const [items, setItems] = useState([]);
+    const [imageUrls, setImageUrls] = useState({});
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/user-role', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Not authenticated');
+                }
+
+                const data = await response.json();
+                if (data.isVendor) {
+                    // If user is a vendor, redirect to vendor page
+                    navigate('/mainPage');
+                    return;
+                }
+
+                // If we get here, user is a buyer, so fetch their cart
+                fetchCart();
+            } catch (error) {
+                console.error("Session check failed:", error);
+                navigate('/login');  // Redirect to login if not authenticated
+            }
+        };
+
+        checkSession();
+    }, [navigate]);
+
+    const fetchCart = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/cart', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to load items');
+            }
+            
+            const data = await response.json();
+            setItems(data);
+            
+            // Load images for each item
+            data.forEach(item => {
+                loadImage(item.plantId);
+            });
+        } catch (error) {
+            console.error("Error fetching cart:", error);
+        }
+    };
+
+    const loadImage = async (plantId) => {
+        try {
+            console.log("Loading image for plantId:", plantId);
+
+            const response = await fetch(`http://localhost:5000/image/${plantId}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Failed to load image');
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            setImageUrls(prev => ({
+                ...prev,
+                [plantId]: url
+            }));
+
+            console.log("Successfully loaded image for plantId:", plantId);
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+    };
+
+    const handlePlacedOrder = async() => {
+        // try{
+        //     const response = await fetch('http://localhost:5000/api/purchased', {
+        //         credentials: 'include',
+        //         method: 'PUT'
+        //     });
+
+        //     const data = await response.json();
+        //     console.log(data);
+        //     if(!response.ok){
+        //         console.log("Here")
+        //     }
+        //     if(response.ok){
+            //     }
+            // }
+            // catch(error){
+                //     console.log(error);
+                // }
+        navigate('/mainPage');
+    };
+
     return (
         <div className="page-container">
 
@@ -84,26 +186,21 @@ function PlaceOrder() {
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td><img src="src/assets/banana.jpg" alt="Golden Bananas" /></td>
-                                <td>Golden Bananas</td>
-                                <td>2</td>
-                                <td>$5.99</td>
-                                <td>$11.98</td>
+                            {items.map(item => (
+                            <tr key={item._id}>
+                                <td><img src={imageUrls[item.plantId]} alt={item.name}/></td>
+                                <td>{item.name}</td>
+                                <td>{item.quantity}</td>
+                                <td>${item.price}</td>
+                                <td>${(item.price * item.quantity).toFixed(2)}</td>
                             </tr>
-                            <tr>
-                                <td><img src="src/assets/potato.jpg" alt="Organic Potato" /></td>
-                                <td>Organic Potato</td>
-                                <td>3</td>
-                                <td>$1.49</td>
-                                <td>$4.47</td>
-                            </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
 
                 <div className="place-order-button-container">
-                    <button className="place-order-button">Place Order</button>
+                    <button className="place-order-button" onClick={handlePlacedOrder}>Place Order</button>
                 </div>
             </div>
         </div>
