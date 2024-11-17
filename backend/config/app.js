@@ -12,11 +12,15 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
 
+
+// Loads environment variables into process.env which is loading the mongodb URI string
 dotenv.config();
-
+//express() is responsible for creating the framework which handles the HTTP requests 
+//and responses for all the API's in the backend.
 const app = express();
+//
 app.use(bodyParser.json());
-
+//
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
@@ -24,6 +28,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }));
 
+//*********************************************************************** */
+//  app.use(session({...})) is function which sets up the user session    //                       
+//  and uses mongodb as storage.                                          //                                                                                //
+//*********************************************************************** */
 app.use(session({
     secret: 'U_of_R_Secret_key',
     resave: false,
@@ -40,13 +48,20 @@ app.use(session({
     }
 }));
 
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI).then(() => console.log('MongoDB connected')).catch(err => console.error(err));
 
-// Signup route
+
+//*************************************************************************** */
+//  The signup route registers new users and outputs either a buyer or vendor //                      
+//  data object to mongodb depending on whether the isVendor attribute is set //                                                     
+//  to true or false.                                                         //
+//*************************************************************************** */
 app.post("/signup", async (req, res) => {
     console.log(req.body);
 
+    // create the user object and store it in req.body
     const { userName, email, password, confirmPassword, province, city, address, isVendor } = req.body;
 
     // Check if passwords match
@@ -77,6 +92,7 @@ app.post("/signup", async (req, res) => {
         }
         else{
             
+
             // if the user is buyer then create new buyer
             buyer = new Buyer({ userName, email, password, province, city, address, isVendor});
 
@@ -89,9 +105,15 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+// Temporarily stores the image files to RAM
 const storage = multer.memoryStorage();
+// Sets up middleware to handle the image upload from the vendorPost form
 const upload = multer({ storage });
-//store the plant into mongodb
+
+//************************************************************************* */
+// The VendorPost route creates a plant object and sends it to mongodb, it  // 
+// also adds the plant ID to the vendors plantArray attribute.              //                                          
+//************************************************************************* */
 app.post("/vendorPost", upload.single('image'), async (req, res) => {
     console.log('Session data:', req.session);
     
@@ -134,7 +156,7 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
         vendor.plantArray.push(savedPlant._id);
         await vendor.save();
 
-        console.log('Updated vendor:', vendor); // Debug log
+        console.log('Updated vendor:', vendor); 
 
         res.status(200).json({ 
             msg: 'Plant registered successfully',
@@ -147,19 +169,24 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
     }
 });
 
-// retrieve the plant information and its image from database
+//************************************************************* */
+// Retrieves all plant objects from mongodb and converts the    //
+// plant images to base64                                       //
+//************************************************************* */
+
 app.get('/api/plants', async (req, res) => {
     console.log('GET /api/plants route called');
     console.log(req.isVendor);
     try {
-        // find all palnts from mongodb
+
+        //returns all plant objects from mongodb
         const plants = await Plant.find({});
 
-        // transform each plant document to include base64 encoded image
+        // Creates a new plant object from each plant document 
+        // that was querried above.
         const plantsImages = plants.map(plant => ({
             ...plant.toObject(),
-            // Convert plant images to base64
-            image: plant.image.toString('base64')
+            image: plant.image.toString('base64') //converts the binary plant image file to base64
         }));
 
         res.json(plantsImages);
@@ -169,7 +196,47 @@ app.get('/api/plants', async (req, res) => {
     }
 });
 
-// retrieve all vendor
+//*********************************************************************** */
+// vendor/plants route retrives the plants from the plantArray attribute  //
+// of which ever vendor is logged in.                                     //
+//*********************************************************************** */
+app.get('/api/vendor/plants', async (req, res) => {
+    try {
+        if (!req.session?.user?.id || !req.session?.user?.isVendor) {
+            return res.status(401).json({ msg: 'Unauthorized' });
+        }
+
+        // Find the vendor and populate their plants
+        const vendor = await Vendor.findById(req.session.user.id);
+        if (!vendor) {
+            return res.status(404).json({ msg: 'Vendor not found' });
+        }
+
+        // Initialize plantArray if it doesn't exist
+        if (!vendor.plantArray) {
+            vendor.plantArray = [];
+            await vendor.save();
+        }
+
+        // Find all plants belonging to this vendor
+        const plants = await Plant.find({ vendorId: vendor._id });
+
+        // Convert plant images to base64 
+        const plantsWithImages = plants.map(plant => ({
+            ...plant.toObject(),
+            image: plant.image.toString('base64')
+        }));
+
+        res.json(plantsWithImages);
+    } catch (error) {
+        console.error('Error fetching vendor plants:', error);
+        res.status(500).json({ error: 'Failed to fetch plants' });
+    }
+});
+
+//******************************************* */
+// Rertrieves all vendors from mongodb        //
+//******************************************* */
 app.get('/api/vendors', async (req, res) => {
     console.log('GET /api/vendor route called');
     try {
@@ -183,13 +250,18 @@ app.get('/api/vendors', async (req, res) => {
     }
 });
 
-
-// retrieve a specific image by the plant id
+//************************************************************* */
+// Returns a plant data object by its specific ID, with all     //
+// plant attributes and converts the plant image from binary    //
+// to base64 because binary image files cannot be sent directly //
+// in JSON responses and base64 can be used directly in HTML    //
+//************************************************************* */
 app.get("/product/:id", async (req, res) => {
     try {
         // find single plant by its id
         const product = await Plant.findById(req.params.id);
         console.log("this is product information: ",product);
+        
 
         // transform each plant document to include base64 encoded image
         const productImages = {
@@ -204,7 +276,10 @@ app.get("/product/:id", async (req, res) => {
     }
 });
 
-// delete a specific plant by its id
+//******************************************************* */
+// Finds a plant object by its ID and deletes that plant  //                       
+// from mongodb, also throws a confirmation message.      //                                                                                                      
+//******************************************************* */
 app.delete('/api/plants/:id', async (req, res) => {
     try {
         // find and delete the plant by its id
@@ -216,8 +291,13 @@ app.delete('/api/plants/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete plant' });
         }
 });
-
-// store a plant into mongodb
+    
+//********************************************************* */
+// Adds a plant to the buyers cart, it updates the quantity //                  
+// in the cart if that plant is already in the cart or adds //
+// a new plant in that specific plant isn't already in the  //
+// cart.                                                    //                                                      
+//******************************************************** */
 app.post('/api/addcart', async (req, res) => {
     // check if user is login and is buyer or not
     if (!req.session.user || req.session.user.isVendor) {
@@ -271,9 +351,11 @@ app.post('/api/addcart', async (req, res) => {
     }
 });
 
-// retireve the plant information stored in the cart db
+//********************************************************* */
+// Retrieves the logged in buyer's cart items and returns   //
+// the items.                                               //
+//********************************************************* */
 app.get('/api/cart', async (req, res) => {
-    // Check if the user has login in or not, and they must to be buyer
     if (!req.session.user || req.session.user.isVendor) {
         return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
     }
@@ -290,44 +372,11 @@ app.get('/api/cart', async (req, res) => {
     }
 });
 
-// retireve the plant information stored in the cart db
-app.get('/api/order', async (req, res) => {
-    // Check if the user has login in or not, and they mush to be vendor
-    if (!req.session.user || !req.session.user.isVendor) {
-        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
-    }
-    try {
-        // pass the session id to vendorid
-        const vendorId = req.session.user.id;
-        // find the plants which contain the specific vendor id
-        const orderItems = await Cart.find({ vendorId: vendorId });
-        // pass the data to frontend
-        res.status(200).json(orderItems);
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving order", error });
-    }
-})
-
-// retrieve the buyer information
-app.get('/api/buyerInfo', async (req, res) => {
-    // Check if the user has login in or not and they mush to be vendor
-    if (!req.session.user || !req.session.user.isVendor) {
-        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
-    }
-    try {
-        // pass the session id to vendorid
-        const vendorId = req.session.user.id;
-
-        // using populate function to replace the buyerId by actual document with the field we wanted
-        const orderItems = await Cart.find({ vendorId: vendorId }).populate('buyerId', 'userName email address');
-
-        res.status(200).json(orderItems);
-    } catch (error) {
-        res.status(500).json({ message: "Error retrieving order", error });
-    }
-})
-
-// retrieve single image by plant id
+ //**************************************************************** */
+ // Retrives and sends a single plant's image from the database
+ // based on the plants ID. 
+ //
+ //**************************************************************** */
 app.get('/image/:id', async (req, res) => {
     console.log("Inside get image route, id:", req.params.id);
 
@@ -341,10 +390,12 @@ app.get('/image/:id', async (req, res) => {
         if (plant && plant.image) {
             // convert the image field to a Buffer
             const imageBuffer = Buffer.from(plant.image.toString('base64'), 'base64');
-            // set the response content type to JPEG
+            //Tells the browser to treat the file as an image
             res.set('Content-Type', 'image/jpeg');
             // send the data to frontend
             res.send(imageBuffer);
+            // Express sends the plant image directly in binary format to the browser
+            //res.send(plant.image);
         } else {
             console.log("trying to delete item");
             // if the plant have already been deletes in plant, delete it as well in cart
@@ -360,7 +411,10 @@ app.get('/image/:id', async (req, res) => {
     }
 });
 
-// delete the plant for a specific buyer
+//*************************************************** */
+// Deletes an item from the cart of the logged in     //
+// buyer                                              //
+//*************************************************** */
 app.delete('/api/cart/item/:id', async (req, res) => {
     // Check if item already exists in cart for this buyer
     if (!req.session.user || req.session.user.isVendor) {
@@ -391,7 +445,11 @@ app.use((err, req, res, next) => {
     res.status(500).json({ msg: err.message || 'Internal server error' });
 });
 
-// get the identification of the user (is vendor or buyer?)
+//**************************************************** */
+// Authenticates the users role, determines whether    //
+// they are a buyer or a vendor by querrying the       //
+// isVendor attribute of the user.                     //
+//**************************************************** */
 app.get('/api/user-role', (req, res) => {
     try {
         console.log('Session data on /api/user-role:', req.session);
@@ -410,100 +468,12 @@ app.get('/api/user-role', (req, res) => {
     }
 });
 
-
-// Gets the specific users shipping info
-app.get('/api/specific-user', async (req, res) => {
-    try {
-        console.log('Session data on /api/specific-user:', req.session);
-        
-        // Confirms that the user is logged in
-        if (!req.session || !req.session.user) {
-            return res.status(401).json({ msg: 'No session found' });
-        }
-        
-        // Find the specific user using their unique ID
-        const user = req.session.user.id;
-        const userInfo = await Buyer.findById(user);
-        
-        // Send the sought after shipping results back as a JSON object
-        res.status(200).json({ 
-            id: userInfo.id,
-            province: userInfo.province,
-            city: userInfo.city,
-            address: userInfo.address ,
-            savedCards: userInfo.savedCards
-        });
-    } catch (error) {
-        console.error('Error in /api/specific-user', error);
-        res.status(500).json({ msg: 'Server error checking for specific user' });
-    }
-});
-
-// I unfortunately don't have time to finalized this and make it work
-// app.post('/api/save-payment', async (req, res) => {
-
-//     if (!req.session.user || req.session.user.isVendor) {
-//         return res.status(401).json({ message: "Unauthorized: Only buyers can add to cart" });
-//     }
-
-//     const {cardNumber, expDate, cvc, nameOnCard, nickname} = req.body;
-//     const user = req.session.user.id;
-//     console.log(user);
-//     const userInfo = await Buyer.findById(user);
-
-//     try {
-//         if(userInfo.savedCards.contains(cardNumber)){
-//             res.status(400).json({msg: "The card is already registered"});
-//         }
-//         else{
-//             let addCard = new Payment({cardNumber, expDate, cvc, nameOnCard, nickname});
-//             await addCard.save();
-//             res.status(201).json({msg: "Card added successfully"});
-//             req.session.user.savedCards.push(addCard)
-//         }
-//     } catch (error){
-//         console.log(error);
-//         res.status(500).json({msg: 'Server error adding card'})
-//     }
-// })
-
-// Unfortunately I also ran out of time to implement this feaure as well 
-// app.put('/api/purchased', async(req, res) => {
-//     if (!req.session.user || req.session.user.isVendor) {
-//         return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
-//     };
-
-//     try{
-//         // Find the users cart
-//         console.log("in the purchased");
-//         const user = req.session.user.id;
-//         const cartItems = await Cart.find({buyerId: user});
-//         const items = cartItems.map(x => x);
-//         console.log(items);
-
-//         const plantIDs = items.forEach(obj => obj.plantId.toString()).map(x => x);
-//         console.log(plantIDs);
-//         items.forEach(obj => console.log(obj.quantity));
-//         items.forEach(obj => {
-//             const newBlah = Plant.findById(obj.plantId);
-//             const newnewBlah = newBlah.map(x = x._id);    
-//             console.log(newnewBlah);
-//     });
-//         items.forEach(obj => Plant.findByIdAndUpdate(plantIDs, {countInStock: countInStock - obj.quantity}));
-//         // Find the items in said cart
-//         // for (const value in items){
-//         //     const obj = items.at(value);
-//         //     console.log(obj);
-//         //     Plant.findByIdAndUpdate(obj._id, {countInStock: countInStock - obj.quantity});
-//         // }
-//         res.status(200).json({message: "Plant updated successfully"});
-//         // Decrease the quantity by how much they ordered (max is one as of right now?)
-//     } catch(error){
-//         res.status(500).json({ message: "Error being purchased", error });
-//     }
-// })
-
-// login router
+//******************************************************************* */
+// Authenticates users by querrying the database for a user by email  //  
+// and then compares the users password with the password input by    //
+// the user. If the authentication passes, a session is started and   //
+// returns the users details.                                         //
+//******************************************************************* */
 app.post("/login", async (req, res) => {
     console.log('Login attempt with:', req.body);
 
@@ -578,35 +548,6 @@ app.post("/login", async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ msg: 'Server error during login' });
-    }
-});
-
-// retrieve the plant by specific vendor
-app.get('/api/vendor/plants', async (req, res) => {
-    try {
-        // check if user is login and is buyer or not
-        if (!req.session.user || !req.session.user.isVendor) {
-            return res.status(401).json({ msg: 'Unauthorized' });
-        }
-
-        // Find vendor and populate their plants
-        const vendor = await Vendor.findById(req.session.user.id)
-            .populate('plantArray');
-
-        if (!vendor) {
-            return res.status(404).json({ msg: 'Vendor not found' });
-        }
-
-        // Convert plant images to base64
-        const plantsWithImages = vendor.plantArray.map(plant => ({
-            ...plant.toObject(),
-            image: plant.image.toString('base64')
-        }));
-
-        res.json(plantsWithImages);
-    } catch (error) {
-        console.error('Error fetching vendor plants:', error);
-        res.status(500).json({ error: 'Failed to fetch plants' });
     }
 });
 
