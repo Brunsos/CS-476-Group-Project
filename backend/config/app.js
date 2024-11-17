@@ -566,4 +566,32 @@ app.post('/logout', (req, res) => {
     }
 });
 
+// Gets the specific users shipping info
+app.get('/api/specific-user', async (req, res) => {
+    try {
+        console.log('Session data on /api/specific-user:', req.session);
+        
+        // Confirms that the user is logged in
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ msg: 'No session found' });
+        }
+        
+        // Find the specific user using their unique ID
+        const user = req.session.user.id;
+        const userInfo = await Buyer.findById(user);
+        
+        // Send the sought after shipping results back as a JSON object
+        res.status(200).json({ 
+            id: userInfo.id,
+            province: userInfo.province,
+            city: userInfo.city,
+            address: userInfo.address ,
+            savedCards: userInfo.savedCards
+        });
+    } catch (error) {
+        console.error('Error in /api/specific-user', error);
+        res.status(500).json({ msg: 'Server error checking for specific user' });
+    }
+});
+
 export default app;
