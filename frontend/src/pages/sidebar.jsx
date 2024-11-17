@@ -9,7 +9,7 @@ const Sidebar = () => {
 
     const handleLogout = async () => { // handles logout when logout button clicked
         try {
-            const response = await fetch('http://localhost:5000/logout', { //route
+            const response = await fetch('http://localhost:5000/logout', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
