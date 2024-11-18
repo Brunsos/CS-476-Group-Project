@@ -142,13 +142,6 @@ function PlaceOrder() {
                         </a>
                     </li>
 
-                    <li>
-                        <Link to="/favorite">
-                            <img src="src/assets/favorite.png" alt="Favorites" />
-                            <span>Favorites</span>
-                        </Link>
-                    </li>
-
                 </ul>
 
                 <ul className="bottom-links">
