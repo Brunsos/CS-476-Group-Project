@@ -7,6 +7,7 @@ import { Children } from 'react';
 import Sidebar from './sidebar';
 
 function Shop() {
+  // set the defualt value
   const [plants, setPlants] = useState([]);
   const [brands, setBrands] = useState([]);
   
@@ -16,12 +17,15 @@ function Shop() {
   const [priceFilter, setPriceFilter] = useState([]);
   const [plantCards, setPlantCards] = useState([]);
 
+  // add a plant to cart db
   const addToCart = async (plant) => {
     try {
+      // Send a POST request to the addcart endpoint
       const response = await fetch('http://localhost:5000/api/addcart', {
-            credentials: 'include',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // Include cookies in the request for session management
+            method: 'POST', // HTTP method for creating new resources
+            headers: { 'Content-Type': 'application/json' },  // Indicate that the request body contains JSON
+            // Convert the provided data into a JSON string to include in the request body
             body: JSON.stringify({
                 plantId: plant._id,
                 name: plant.common_name,
@@ -41,10 +45,14 @@ function Shop() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        // Send a request to get the plants
         const response = await fetch('http://localhost:5000/api/plants');
         if (!response.ok) throw new Error('Failed to fetch products');
+
+        // Parse the response JSON
         const data = await response.json();
 
+        // set the plant data
         setPlants(data);
         setPlantFilter(data);
       } catch (error) {
@@ -58,10 +66,14 @@ function Shop() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
+        // Send a request to the get the vendors
         const response = await fetch('http://localhost:5000/api/vendors');
         if (!response.ok) throw new Error('Failed to fetch vendors');
+
+        // Parse the response JSON
         const data = await response.json();
 
+        // set the brands data
         setBrands(data);
         setBrandFilter(data);
       } catch (error) {
@@ -94,19 +106,19 @@ function Shop() {
       var plantCard =  (
       
       <section key={obj._id} id="product-container">
-        <div className="product-card">
-          <div className="product-image-container">
-            <img src={`data:image/jpeg;base64,${obj.image}`} alt={obj.common_name} className="product-image" />
-          </div>
+        <div className="list-product-card">
+         
+            <img src={`data:image/jpeg;base64,${obj.image}`} alt={obj.common_name} className="list-product-image" />
+          
 
-          <h2 className="product-title">{obj.common_name}</h2>
+          <h2 className="list-product-title">{obj.common_name}</h2>
 
-          <div className="product-description-container">
+          <div className="list-product-description">
             <p>{obj.description}</p>
           </div>
 
-          <p className="product-price">`Price: ${obj.price}`</p>
-          <button onClick={() => addToCart(obj)} className="read-more-button">Add to cart</button>
+          <p className="list-product-price">`Price: ${obj.price}`</p>
+          <button onClick={() => addToCart(obj)} className="list-button">Add to cart</button>
         </div>
       </section>
       );
@@ -184,7 +196,7 @@ function Shop() {
       <div className="sidebar">
         <Sidebar />
       </div>
-      <div id="shop-page">
+      <div id="list-page">
         <aside id="filter-container">
           <h1>Filter by Plants</h1>
           <section id='plants'>
@@ -209,7 +221,9 @@ function Shop() {
           <input type="number" placeholder="Enter Price" name="price" onChange={handleChange}/>
           <button className="reset-button">Reset</button>
         </aside>
+        <div className="product-content">
         {plantCards}
+        </div>
       </div>
     </div>
   );

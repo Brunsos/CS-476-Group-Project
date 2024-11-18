@@ -5,18 +5,20 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar';
 
 function Orders() {
+    // set the defualt value
     const [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
     const [buyers, setBuyer] = useState([]);
     const [items, setItems] = useState([]);
     const [imageUrls, setImageUrls] = useState({});
 
+    // useEffect hook to fetch the list of plants when the component mounts
     useEffect(() => {
         const checkSession = async () => {
             try {
                 // send a request to validate the session
                 const response = await fetch('http://localhost:5000/api/user-role', {
-                    credentials: 'include'
+                    credentials: 'include' // Include cookies for session handling
                 });
                 
                 if (!response.ok) {
@@ -46,7 +48,7 @@ function Orders() {
         try {
             // send a request to backend and get the response from backend
             const response = await fetch('http://localhost:5000/api/order', {
-                credentials: 'include'
+                credentials: 'include' // Include cookies for session handling
             });
             
             if (!response.ok) {
@@ -93,7 +95,7 @@ function Orders() {
 
             // send a request to backend and get the response from backend
             const response = await fetch(`http://localhost:5000/image/${plantId}`, {
-                credentials: 'include'
+                credentials: 'include' // Include cookies for session handling
             });
 
             if (!response.ok) throw new Error('Failed to load image');

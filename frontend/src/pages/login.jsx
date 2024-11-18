@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Sidebar from './sidebar';
 
 const Login = () => {
+    // set the defualt value
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
@@ -15,10 +16,12 @@ const Login = () => {
 const handleLogin = async (e) => {
     e.preventDefault();
 
+    // set the error content to empty
     setErrors({});
 
     const newErrors = {};
 
+    // error check
     if (!email.trim()) {
       newErrors.email = 'Email is required.';
     }
@@ -29,7 +32,7 @@ const handleLogin = async (e) => {
     if (password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters long.';
     }
-
+    // check is there any content in the newErrors
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -37,12 +40,14 @@ const handleLogin = async (e) => {
 
 // pass the data to backend
 try {
+    // Send a POST request to the signup endpoint
     const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
+        method: 'POST', // Specify the HTTP method as POST for creating a new resource
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', // Indicate that the request body contains JSON
         },
-        credentials: 'include', 
+        credentials: 'include', // Include cookies for session handling
+        // Convert the provided data into a JSON string to include in the request body
         body: JSON.stringify({ email, password }),
     });
 
