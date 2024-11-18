@@ -119,7 +119,7 @@ function Shop() {
 
           <p className="list-product-price">`Price: ${obj.price}`</p>
           {!user.isVendor && (
-              <button onClick={() => addToCart(product)} className="add-to-cart-button">Add to cart</button>
+              <button onClick={() => addToCart(obj)} className="list-button">Add to cart</button>
           )}
         </div>
       </section>
