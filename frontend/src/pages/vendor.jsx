@@ -2,16 +2,14 @@ import './css/vendor.css';
 import './css/sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './sidebar';
 
 function Vendor() {
   const navigate = useNavigate();
   const [plants, setPlants] = useState([]);
+  const mounted = useRef(false);
 
-  const goToListPage = () => {
-    navigate('/list');
-};
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -34,6 +32,7 @@ function Vendor() {
   };
 
   useEffect(() => {
+    if (!mounted.current) {
     const fetchPlants = async () => {
         try {
             const response = await fetch('http://localhost:5000/api/vendor/plants', {
@@ -50,7 +49,10 @@ function Vendor() {
             console.error('Error:', error);
         }
     };
+
+    mounted.current = true;
     fetchPlants();
+  }
 }, []);
 
 return (
@@ -64,7 +66,6 @@ return (
         <h2 className="special-products-title">My Products</h2>
         <div className="vendor-header-buttons">
           <button type="submit" className="vendor-add-button" onClick={handleSubmit}>Add new product</button>
-          <button className="vendor-shop-button" onClick={goToListPage}>Shop</button>
         </div>
       </div>
 

@@ -10,6 +10,7 @@ import cors from "cors";
 import multer from 'multer';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import { performance } from 'perf_hooks';
 
 
 
@@ -115,6 +116,7 @@ const upload = multer({ storage });
 // also adds the plant ID to the vendors plantArray attribute.              //                                          
 //************************************************************************* */
 app.post("/vendorPost", upload.single('image'), async (req, res) => {
+    const startTime = performance.now();
     console.log('Session data:', req.session);
     
     try {
@@ -125,6 +127,7 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
 
         // Find the vendor first
         const vendor = await Vendor.findById(req.session.user.id);
+
         if (!vendor) {
             return res.status(404).json({ msg: 'Vendor not found' });
         }
@@ -156,6 +159,10 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
         vendor.plantArray.push(savedPlant._id);
         await vendor.save();
 
+        //Calculate how long all operations of vendorPost took and dicplay it
+        const totalTime = performance.now() - startTime; 
+        console.log(`Total vendorPost operation took: ${totalTime.toFixed(2)}ms`);
+
         console.log('Updated vendor:', vendor); 
 
         res.status(200).json({ 
@@ -177,13 +184,16 @@ app.post("/vendorPost", upload.single('image'), async (req, res) => {
 app.get('/api/plants', async (req, res) => {
     console.log('GET /api/plants route called');
     console.log(req.isVendor);
+
     try {
+
 
         //returns all plant objects from mongodb
         const plants = await Plant.find({});
 
         // Creates a new plant object from each plant document 
         // that was querried above.
+
         const plantsImages = plants.map(plant => ({
             ...plant.toObject(),
             image: plant.image.toString('base64') //converts the binary plant image file to base64
@@ -201,6 +211,7 @@ app.get('/api/plants', async (req, res) => {
 // of which ever vendor is logged in.                                     //
 //*********************************************************************** */
 app.get('/api/vendor/plants', async (req, res) => {
+    const startTime = performance.now();
     try {
         if (!req.session?.user?.id || !req.session?.user?.isVendor) {
             return res.status(401).json({ msg: 'Unauthorized' });
@@ -226,6 +237,10 @@ app.get('/api/vendor/plants', async (req, res) => {
             ...plant.toObject(),
             image: plant.image.toString('base64')
         }));
+
+        //Calculate how long all operations of vendor took and dicplay it
+        const totalTime = performance.now() - startTime; 
+        console.log(`Total vendor operation took: ${totalTime.toFixed(2)}ms`);
 
         res.json(plantsWithImages);
     } catch (error) {
