@@ -151,6 +151,7 @@ function ShoppingCart() {
                                 <h2>{item.name}</h2>
                                 <span className="item-price">${item.price}</span>
                             </div>
+                                <span className="item-quantity">Quantity: {item.quantity}</span>
                                 <button className="remove-item" onClick={() => handleDelete(item._id)}>🗑️</button>
                         </div>
                         
