@@ -609,4 +609,39 @@ app.get('/api/specific-user', async (req, res) => {
     }
 });
 
+// Gets the buyer's orders
+app.get('/api/order', async (req, res) => {
+    // Check if the user has login in or not
+    if (!req.session.user || !req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+    try {
+        // Find the specific vendor using their unique ID
+        const vendorId = req.session.user.id;
+        const orderItems = await Cart.find({ vendorId: vendorId });
+        res.status(200).json(orderItems);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving order", error });
+    }
+})
+
+// Gets the buyer's personal information
+app.get('/api/buyerInfo', async (req, res) => {
+    // Check if the user has login in or not
+    if (!req.session.user || !req.session.user.isVendor) {
+        return res.status(401).json({ message: "Unauthorized: Only buyers can view cart" });
+    }
+    try {
+        // Find the specific vendor using their unique ID
+        const vendorId = req.session.user.id;
+
+        // using populate function to replace the buyerId by actual document with the field we wanted
+        const orderItems = await Cart.find({ vendorId: vendorId }).populate('buyerId', 'userName email address');
+
+        res.status(200).json(orderItems);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving order", error });
+    }
+})
+
 export default app;

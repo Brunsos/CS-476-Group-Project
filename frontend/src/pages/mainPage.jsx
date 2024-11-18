@@ -105,7 +105,7 @@ function HomePage() {
 
             <div className="special-products-header">
                 <h2 className="special-products">Special Products</h2>
-                {isLoggedIn && (
+                {isLoggedIn && !isVendor && (
                     <button className="shop-button" onClick={goToListPage}>Shop</button>
                 )}
             </div>

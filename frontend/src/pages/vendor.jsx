@@ -11,11 +11,6 @@ function Vendor() {
   const [plants, setPlants] = useState([]);
   const mounted = useRef(false);
 
-  // nevigate to list page
-  const goToListPage = () => {
-    navigate('/list');
-  };
-
   // Function to handle form submission
   const handleSubmit = (event) => {
     // Prevent default form submission to handle it programmatically
@@ -84,7 +79,6 @@ return (
         <h2 className="special-products-title">My Products</h2>
         <div className="vendor-header-buttons">
           <button type="submit" className="vendor-add-button" onClick={handleSubmit}>Add new product</button>
-          <button className="vendor-shop-button" onClick={goToListPage}>Shop</button>
         </div>
       </div>
 
